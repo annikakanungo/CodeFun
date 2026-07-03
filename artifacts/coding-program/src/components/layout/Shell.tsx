@@ -1,8 +1,9 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Code, Presentation, Trophy, Flame, Star, Sparkles } from "lucide-react";
+import { BookOpen, Home, Code, Presentation, Trophy, Flame, Star, Sparkles, LogIn, UserPlus, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetStudentProgress, getGetStudentProgressQueryKey } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
+import { useUser, useClerk, Show } from "@clerk/react";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Home },
@@ -12,8 +13,12 @@ const NAV_ITEMS = [
   { href: "/teacher", label: "Teacher Hub", icon: Presentation },
 ];
 
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 export function Shell({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const { user } = useUser();
+  const { signOut } = useClerk();
 
   // Fetch progress for XP and Level
   const { data: progress } = useGetStudentProgress("demo-student", {
@@ -88,8 +93,49 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
 
+        {/* Auth Section */}
+        <div className="px-6 pb-4 relative z-10">
+          <Show when="signed-out">
+            <div className="space-y-2">
+              <Link
+                href="/sign-up"
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 text-violet-900 font-black text-sm shadow-lg hover:opacity-90 transition-opacity"
+              >
+                <UserPlus className="w-4 h-4" />
+                Create Free Account
+              </Link>
+              <Link
+                href="/sign-in"
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-white/10 text-white/80 font-bold text-sm hover:bg-white/15 transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                Sign In
+              </Link>
+            </div>
+          </Show>
+          <Show when="signed-in">
+            <div className="flex items-center justify-between bg-white/10 rounded-xl px-3 py-2.5">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-violet-400 flex items-center justify-center font-black text-xs text-white shrink-0">
+                  {user?.firstName?.[0] ?? user?.emailAddresses?.[0]?.emailAddress?.[0]?.toUpperCase() ?? '?'}
+                </div>
+                <span className="text-white/90 text-sm font-semibold truncate">
+                  {user?.firstName ?? user?.emailAddresses?.[0]?.emailAddress}
+                </span>
+              </div>
+              <button
+                onClick={() => signOut({ redirectUrl: basePath || '/' })}
+                className="text-white/40 hover:text-white/80 transition-colors p-1 rounded-lg hover:bg-white/10"
+                title="Sign out"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          </Show>
+        </div>
+
         {/* Gamification Widget */}
-        <div className="mt-auto p-6 relative z-10">
+        <div className="p-6 pt-0 relative z-10">
           <div className="bg-black/30 backdrop-blur-md rounded-2xl p-4 border border-white/10 shadow-xl">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
