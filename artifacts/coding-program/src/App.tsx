@@ -10,7 +10,6 @@ import Courses from '@/pages/courses';
 import CourseDetail from '@/pages/course-detail';
 import LessonDetail from '@/pages/lesson-detail';
 import Projects from '@/pages/projects';
-import Resources from '@/pages/resources';
 import TeacherHub from '@/pages/teacher';
 import Progress from '@/pages/progress';
 
@@ -25,7 +24,6 @@ function Router() {
         <Route path="/courses/:id" component={CourseDetail} />
         <Route path="/lessons/:id" component={LessonDetail} />
         <Route path="/projects" component={Projects} />
-        <Route path="/resources" component={Resources} />
         <Route path="/teacher" component={TeacherHub} />
         <Route path="/progress/:studentId" component={Progress} />
         <Route component={NotFound} />

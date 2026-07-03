@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Code, Lightbulb, Presentation, Trophy, Flame, Star, Sparkles } from "lucide-react";
+import { BookOpen, Home, Code, Presentation, Trophy, Flame, Star, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetStudentProgress, getGetStudentProgressQueryKey } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
@@ -8,7 +8,6 @@ const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/courses", label: "Courses", icon: BookOpen },
   { href: "/projects", label: "Projects", icon: Code },
-  { href: "/resources", label: "Free Tools & Tutorials", icon: Lightbulb },
   { href: "/progress/demo-student", label: "Your Stats", icon: Trophy },
   { href: "/teacher", label: "Teacher Hub", icon: Presentation },
 ];
