@@ -50,7 +50,7 @@ export default function Projects() {
         
         <div className="max-w-2xl space-y-3 relative z-10">
           <h1 className="text-4xl font-bold font-heading text-white">Student Showcase</h1>
-          <p className="text-lg text-indigo-200">Real projects built by CodePath students. Get inspired and share what you've created.</p>
+          <p className="text-lg text-indigo-200">Real projects built by code.fun students. Get inspired and share what you've created.</p>
         </div>
         
         <Dialog open={open} onOpenChange={setOpen}>

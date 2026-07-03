@@ -24,7 +24,7 @@ export default function Home() {
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/90 font-medium">
             From your first block of code in Grade 4 to deploying full apps in Grade 12. 
-            CodePath is your free, open path to mastering software.
+            code.fun is your free, open path to mastering software.
           </p>
           <div className="flex flex-wrap gap-4 pt-4">
             <Link href="/courses" className="inline-flex items-center gap-2 bg-white text-primary px-6 py-3 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-sm">

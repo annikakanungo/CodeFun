@@ -20,7 +20,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <header className="md:hidden sticky top-0 z-50 flex items-center justify-between px-4 py-3 border-b bg-background/80 backdrop-blur-sm">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl font-heading text-primary">
           <Code className="w-6 h-6" />
-          CodePath
+          code.fun
         </Link>
       </header>
 
@@ -28,7 +28,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <aside className="hidden md:flex flex-col w-64 border-r bg-card shrink-0 sticky top-0 h-[100dvh] p-4">
         <Link href="/" className="flex items-center gap-2 font-bold text-2xl font-heading text-primary mb-8 px-2">
           <Code className="w-8 h-8" />
-          CodePath
+          code.fun
         </Link>
         <nav className="flex-1 space-y-1">
           {NAV_ITEMS.map((item) => {
