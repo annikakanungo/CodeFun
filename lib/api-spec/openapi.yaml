@@ -3,20 +3,39 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Free Coding Program API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: courses
+    description: Grade-based course curriculum
+  - name: lessons
+    description: Individual lessons within courses
+  - name: exercises
+    description: Guided coding exercises
+  - name: quizzes
+    description: Lesson quizzes
+  - name: resources
+    description: Free online learning resources
+  - name: projects
+    description: Student project showcase
+  - name: teacher-plans
+    description: Teacher lesson plans
+  - name: curriculum
+    description: Ontario curriculum mappings
+  - name: progress
+    description: Student progress tracking
+  - name: stats
+    description: Program summary statistics
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +43,354 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      summary: List all courses
+      parameters:
+        - name: grade
+          in: query
+          schema:
+            type: integer
+          description: Filter by grade (4-12)
+        - name: gradeband
+          in: query
+          schema:
+            type: string
+            enum: [elementary, middle, secondary]
+          description: Filter by grade band
+      responses:
+        "200":
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /courses/{id}:
+    get:
+      operationId: getCourse
+      tags: [courses]
+      summary: Get course details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDetail"
+        "404":
+          description: Not found
+
+  /courses/{id}/lessons:
+    get:
+      operationId: getCourseLessons
+      tags: [lessons]
+      summary: Get lessons for a course
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lessons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lesson"
+
+  /lessons/{id}:
+    get:
+      operationId: getLesson
+      tags: [lessons]
+      summary: Get lesson details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lesson details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LessonDetail"
+        "404":
+          description: Not found
+
+  /lessons/{id}/exercises:
+    get:
+      operationId: getLessonExercises
+      tags: [exercises]
+      summary: Get exercises for a lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Exercises
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exercise"
+
+  /lessons/{id}/quiz:
+    get:
+      operationId: getLessonQuiz
+      tags: [quizzes]
+      summary: Get quiz for a lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Quiz with questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Quiz"
+        "404":
+          description: No quiz for this lesson
+
+  /lessons/{id}/curriculum-mappings:
+    get:
+      operationId: getLessonCurriculumMappings
+      tags: [curriculum]
+      summary: Get Ontario curriculum mappings for a lesson
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Curriculum mappings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CurriculumMapping"
+
+  /resources:
+    get:
+      operationId: listResources
+      tags: [resources]
+      summary: List free learning resources
+      parameters:
+        - name: grade
+          in: query
+          schema:
+            type: integer
+          description: Filter by grade
+        - name: category
+          in: query
+          schema:
+            type: string
+          description: Filter by category (e.g. python, html, javascript)
+      responses:
+        "200":
+          description: Resources list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Resource"
+
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List student projects
+      parameters:
+        - name: grade
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: Student projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
+    post:
+      operationId: submitProject
+      tags: [projects]
+      summary: Submit a student project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Project submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /teacher-plans:
+    get:
+      operationId: listTeacherPlans
+      tags: [teacher-plans]
+      summary: List teacher lesson plans
+      parameters:
+        - name: grade
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Teacher plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeacherPlan"
+
+  /teacher-plans/{id}:
+    get:
+      operationId: getTeacherPlan
+      tags: [teacher-plans]
+      summary: Get teacher plan details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Teacher plan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeacherPlan"
+        "404":
+          description: Not found
+
+  /progress/{studentId}:
+    get:
+      operationId: getStudentProgress
+      tags: [progress]
+      summary: Get student progress
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Student progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentProgress"
+
+  /progress:
+    post:
+      operationId: recordProgress
+      tags: [progress]
+      summary: Record lesson or exercise completion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProgressInput"
+      responses:
+        "200":
+          description: Progress recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProgressRecord"
+
+  /stats:
+    get:
+      operationId: getProgramStats
+      tags: [stats]
+      summary: Get overall program statistics
+      responses:
+        "200":
+          description: Program stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProgramStats"
+
+  /courses/by-grade-band:
+    get:
+      operationId: getCoursesByGradeBand
+      tags: [courses]
+      summary: Courses grouped by grade band (elementary, middle, secondary)
+      responses:
+        "200":
+          description: Courses grouped by grade band
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CoursesByGradeBand"
+
+  /recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [stats]
+      summary: Recent student projects and activity feed
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Recent activity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +401,357 @@ components:
       required:
         - status
 
+    Course:
+      type: object
+      required: [id, grade, title, description, language, gradeband, lessonCount, color]
+      properties:
+        id:
+          type: integer
+        grade:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        language:
+          type: string
+        gradeband:
+          type: string
+          enum: [elementary, middle, secondary]
+        lessonCount:
+          type: integer
+        color:
+          type: string
+
+    CourseDetail:
+      allOf:
+        - $ref: "#/components/schemas/Course"
+        - type: object
+          required: [objectives, weeklyTopics]
+          properties:
+            objectives:
+              type: array
+              items:
+                type: string
+            weeklyTopics:
+              type: array
+              items:
+                type: string
+
+    Lesson:
+      type: object
+      required: [id, courseId, title, order, durationMinutes, hasVideo, hasExercises, hasQuiz]
+      properties:
+        id:
+          type: integer
+        courseId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        order:
+          type: integer
+        durationMinutes:
+          type: integer
+        hasVideo:
+          type: boolean
+        hasExercises:
+          type: boolean
+        hasQuiz:
+          type: boolean
+        videoUrl:
+          type: ["string", "null"]
+
+    LessonDetail:
+      allOf:
+        - $ref: "#/components/schemas/Lesson"
+        - type: object
+          properties:
+            content:
+              type: ["string", "null"]
+            objectives:
+              type: array
+              items:
+                type: string
+
+    Exercise:
+      type: object
+      required: [id, lessonId, title, instructions, starterCode, language, order]
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: integer
+        title:
+          type: string
+        instructions:
+          type: string
+        starterCode:
+          type: string
+        expectedOutput:
+          type: ["string", "null"]
+        language:
+          type: string
+        order:
+          type: integer
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+
+    Quiz:
+      type: object
+      required: [id, lessonId, questions]
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: integer
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuizQuestion"
+
+    QuizQuestion:
+      type: object
+      required: [id, question, options, correctIndex]
+      properties:
+        id:
+          type: integer
+        question:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: integer
+
+    CurriculumMapping:
+      type: object
+      required: [id, lessonId, expectationCode, expectationText, strand]
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: integer
+        expectationCode:
+          type: string
+        expectationText:
+          type: string
+        strand:
+          type: string
+        grade:
+          type: integer
+
+    Resource:
+      type: object
+      required: [id, title, url, description, category, isFree, gradeMin, gradeMax]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        isFree:
+          type: boolean
+        gradeMin:
+          type: integer
+        gradeMax:
+          type: integer
+        platform:
+          type: ["string", "null"]
+
+    Project:
+      type: object
+      required: [id, studentName, grade, title, description, language, createdAt]
+      properties:
+        id:
+          type: integer
+        studentName:
+          type: string
+        grade:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        language:
+          type: string
+        projectUrl:
+          type: ["string", "null"]
+        codeSnippet:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    ProjectInput:
+      type: object
+      required: [studentName, grade, title, description, language]
+      properties:
+        studentName:
+          type: string
+        grade:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        language:
+          type: string
+        projectUrl:
+          type: string
+        codeSnippet:
+          type: string
+
+    TeacherPlan:
+      type: object
+      required: [id, lessonId, grade, title, objectives, materials, activities, assessmentIdeas, durationMinutes]
+      properties:
+        id:
+          type: integer
+        lessonId:
+          type: ["integer", "null"]
+        grade:
+          type: integer
+        title:
+          type: string
+        objectives:
+          type: array
+          items:
+            type: string
+        materials:
+          type: array
+          items:
+            type: string
+        activities:
+          type: array
+          items:
+            type: string
+        assessmentIdeas:
+          type: array
+          items:
+            type: string
+        durationMinutes:
+          type: integer
+        curriculumExpectations:
+          type: array
+          items:
+            type: string
+
+    ProgressRecord:
+      type: object
+      required: [id, studentId, lessonId, completedAt, score]
+      properties:
+        id:
+          type: integer
+        studentId:
+          type: string
+        lessonId:
+          type: integer
+        completedAt:
+          type: string
+          format: date-time
+        score:
+          type: ["integer", "null"]
+
+    StudentProgress:
+      type: object
+      required: [studentId, completedLessons, totalLessons, currentGrade, badges]
+      properties:
+        studentId:
+          type: string
+        completedLessons:
+          type: integer
+        totalLessons:
+          type: integer
+        currentGrade:
+          type: ["integer", "null"]
+        badges:
+          type: array
+          items:
+            type: string
+        recentCompletions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProgressRecord"
+
+    ProgressInput:
+      type: object
+      required: [studentId, lessonId]
+      properties:
+        studentId:
+          type: string
+        lessonId:
+          type: integer
+        score:
+          type: integer
+        exerciseId:
+          type: integer
+
+    ProgramStats:
+      type: object
+      required: [totalCourses, totalLessons, totalStudents, totalProjects, totalResources, gradeBreakdown]
+      properties:
+        totalCourses:
+          type: integer
+        totalLessons:
+          type: integer
+        totalStudents:
+          type: integer
+        totalProjects:
+          type: integer
+        totalResources:
+          type: integer
+        gradeBreakdown:
+          type: array
+          items:
+            type: object
+            required: [grade, studentCount]
+            properties:
+              grade:
+                type: integer
+              studentCount:
+                type: integer
+
+    CoursesByGradeBand:
+      type: object
+      required: [elementary, middle, secondary]
+      properties:
+        elementary:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course"
+        middle:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course"
+        secondary:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course"
+
+    ActivityItem:
+      type: object
+      required: [id, type, description, grade, createdAt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [project_submitted, lesson_completed, badge_earned]
+        description:
+          type: string
+        grade:
+          type: integer
+        studentName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time

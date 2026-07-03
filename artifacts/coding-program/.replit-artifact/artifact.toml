@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Free Coding Program"
+version = "1.0.0"
+id = "artifacts/coding-program"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19579
+
+[services.development]
+run = "pnpm --filter @workspace/coding-program run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/coding-program", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/coding-program/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19579"
+BASE_PATH = "/"
