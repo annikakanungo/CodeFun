@@ -1,23 +1,20 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
+import { Link } from "wouter";
+import { BookOpen } from "lucide-react";
+import { PageTransition } from "@/components/PageTransition";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              404 Page Not Found
-            </h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <PageTransition className="min-h-screen w-full flex items-center justify-center bg-background">
+      <div className="text-center space-y-6">
+        <BookOpen className="w-24 h-24 text-muted-foreground/30 mx-auto" />
+        <h1 className="text-5xl font-black font-heading tracking-tight">404 - Lost in the void</h1>
+        <p className="text-xl text-muted-foreground font-medium">This page doesn't exist.</p>
+        <div className="pt-4">
+          <Link href="/" className="inline-block bg-primary text-white font-bold px-8 py-4 rounded-xl hover:bg-primary/90 transition-colors">
+            Return Home
+          </Link>
+        </div>
+      </div>
+    </PageTransition>
   );
 }
