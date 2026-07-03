@@ -11,17 +11,133 @@ import {
   getGetLessonQuizQueryKey,
   getGetLessonCurriculumMappingsQueryKey
 } from "@workspace/api-client-react";
-import { ArrowLeft, Play, Code, CheckCircle, HelpCircle, BookOpen, GraduationCap, Star, Zap } from "lucide-react";
+import { ArrowLeft, Play, Code, CheckCircle, HelpCircle, BookOpen, GraduationCap, Star, Zap, Lock, UserPlus, LogIn, Trophy, Flame } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
+import { useUser } from "@clerk/react";
+
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function LessonGate({ lessonTitle, courseId }: { lessonTitle?: string; courseId?: number }) {
+  return (
+    <PageTransition>
+      <div className="min-h-screen bg-background">
+        {/* Blurred lesson preview */}
+        <div className="relative">
+          {/* Top bar */}
+          <div className="px-6 py-5 border-b border-border flex items-center gap-4">
+            <Link href={courseId ? `/courses/${courseId}` : "/courses"}>
+              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
+                <ArrowLeft className="w-4 h-4" /> Back
+              </Button>
+            </Link>
+            <div className="flex-1 min-w-0">
+              <div className="h-5 w-64 bg-muted rounded-md blur-sm" />
+            </div>
+          </div>
+
+          {/* Blurred content preview */}
+          <div className="p-6 select-none pointer-events-none blur-sm opacity-40">
+            <div className="max-w-3xl mx-auto space-y-4">
+              <div className="h-8 w-3/4 bg-muted rounded-lg" />
+              <div className="h-4 w-1/2 bg-muted rounded" />
+              <div className="h-48 bg-muted rounded-2xl" />
+              <div className="grid grid-cols-3 gap-3">
+                {[1,2,3].map(i => <div key={i} className="h-10 bg-muted rounded-xl" />)}
+              </div>
+              <div className="space-y-2">
+                {[1,2,3,4].map(i => <div key={i} className="h-4 bg-muted rounded" style={{ width: `${85 - i * 8}%` }} />)}
+              </div>
+            </div>
+          </div>
+
+          {/* Gate overlay */}
+          <div className="absolute inset-0 flex items-center justify-center px-4" style={{ background: 'linear-gradient(to bottom, transparent 0%, hsl(var(--background) / 0.7) 20%, hsl(var(--background) / 0.97) 40%)' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-md mt-32"
+            >
+              <div className="bg-white rounded-3xl shadow-2xl shadow-violet-200 border border-violet-100 overflow-hidden">
+                {/* Top gradient strip */}
+                <div className="h-2 bg-gradient-to-r from-violet-500 via-purple-500 to-amber-400" />
+
+                <div className="p-8 text-center">
+                  {/* Lock icon */}
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.15, type: "spring", stiffness: 260, damping: 20 }}
+                    className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-violet-300"
+                  >
+                    <Lock className="w-8 h-8 text-white" />
+                  </motion.div>
+
+                  {lessonTitle && (
+                    <p className="text-xs font-bold text-violet-400 uppercase tracking-widest mb-2">Lesson locked</p>
+                  )}
+                  <h2 className="text-2xl font-black text-[#1a0a2e] mb-3 leading-tight">
+                    {lessonTitle ? `"${lessonTitle}"` : 'This lesson'} is free —<br />
+                    <span className="text-violet-600">you just need an account</span>
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+                    Create your free code.fun account to unlock every lesson, earn XP, collect badges, and track your progress.
+                  </p>
+
+                  {/* Perks */}
+                  <div className="grid grid-cols-3 gap-3 mb-8">
+                    {[
+                      { icon: Trophy, label: 'Earn badges', color: 'text-amber-500 bg-amber-50' },
+                      { icon: Zap, label: 'Track XP', color: 'text-violet-500 bg-violet-50' },
+                      { icon: Flame, label: 'Keep streaks', color: 'text-orange-500 bg-orange-50' },
+                    ].map(({ icon: Icon, label, color }) => (
+                      <div key={label} className="flex flex-col items-center gap-1.5 p-3 rounded-2xl bg-muted/50">
+                        <div className={cn("w-8 h-8 rounded-xl flex items-center justify-center", color)}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <span className="text-[11px] font-bold text-muted-foreground">{label}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTAs */}
+                  <div className="space-y-3">
+                    <Link href="/sign-up">
+                      <Button className="w-full h-12 text-base font-black rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 hover:opacity-90 text-violet-900 shadow-lg shadow-amber-200 border-0 gap-2">
+                        <UserPlus className="w-5 h-5" />
+                        Create Free Account
+                      </Button>
+                    </Link>
+                    <Link href="/sign-in">
+                      <Button variant="ghost" className="w-full h-11 text-sm font-bold text-violet-700 hover:text-violet-900 hover:bg-violet-50 gap-2 rounded-xl">
+                        <LogIn className="w-4 h-4" />
+                        Already have an account? Sign in
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-center text-xs text-muted-foreground mt-4">
+                Free forever. No credit card. No ads.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </PageTransition>
+  );
+}
 
 export default function LessonDetail() {
   const { id } = useParams();
   const lessonId = Number(id);
+  const { isSignedIn, isLoaded } = useUser();
   
   const [activeTab, setActiveTab] = useState("content");
   const [showCelebration, setShowCelebration] = useState(false);
@@ -64,6 +180,11 @@ export default function LessonDetail() {
     setQuizScore(score);
     setQuizSubmitted(true);
   };
+
+  // Show gate for signed-out users (wait for Clerk to load first)
+  if (isLoaded && !isSignedIn) {
+    return <LessonGate lessonTitle={lesson?.title} courseId={lesson?.courseId ?? undefined} />;
+  }
 
   if (lessonLoading) {
     return (
