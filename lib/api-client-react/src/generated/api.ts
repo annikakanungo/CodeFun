@@ -34,6 +34,7 @@ import type {
   ListProjectsParams,
   ListResourcesParams,
   ListTeacherPlansParams,
+  NewLessonInput,
   ProgramStats,
   ProgressInput,
   ProgressRecord,
@@ -42,7 +43,9 @@ import type {
   Quiz,
   Resource,
   StudentProgress,
-  TeacherPlan
+  TeacherPlan,
+  UserProfile,
+  UserRoleInput
 } from './api.schemas';
 
 import { customFetch } from '../custom-fetch';
@@ -148,6 +151,223 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
 
 
+
+export const getGetMeUrl = () => {
+
+
+
+
+  return `/api/users/me`
+}
+
+/**
+ * @summary Get current user profile and role
+ */
+export const getMe = async ( options?: RequestInit): Promise<UserProfile> => {
+
+  return customFetch<UserProfile>(getGetMeUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetMeQueryKey = () => {
+    return [
+    `/api/users/me`
+    ] as const;
+    }
+
+
+export const getGetMeQueryOptions = <TData = Awaited<ReturnType<typeof getMe>>, TError = ErrorType<void>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMeQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) => getMe({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>
+export type GetMeQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get current user profile and role
+ */
+
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = ErrorType<void>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetMeQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSaveUserRoleUrl = () => {
+
+
+
+
+  return `/api/users/me`
+}
+
+/**
+ * @summary Create or update current user role (onboarding)
+ */
+export const saveUserRole = async (userRoleInput: UserRoleInput, options?: RequestInit): Promise<UserProfile> => {
+
+  return customFetch<UserProfile>(getSaveUserRoleUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(userRoleInput)
+  }
+);}
+
+
+
+
+export const getSaveUserRoleMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveUserRole>>, TError,{data: BodyType<UserRoleInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof saveUserRole>>, TError,{data: BodyType<UserRoleInput>}, TContext> => {
+
+const mutationKey = ['saveUserRole'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof saveUserRole>>, {data: BodyType<UserRoleInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  saveUserRole(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SaveUserRoleMutationResult = NonNullable<Awaited<ReturnType<typeof saveUserRole>>>
+    export type SaveUserRoleMutationBody = BodyType<UserRoleInput>
+    export type SaveUserRoleMutationError = ErrorType<void>
+
+    /**
+ * @summary Create or update current user role (onboarding)
+ */
+export const useSaveUserRole = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof saveUserRole>>, TError,{data: BodyType<UserRoleInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof saveUserRole>>,
+        TError,
+        {data: BodyType<UserRoleInput>},
+        TContext
+      > => {
+      return useMutation(getSaveUserRoleMutationOptions(options));
+    }
+
+export const getTeacherCreateLessonUrl = () => {
+
+
+
+
+  return `/api/lessons`
+}
+
+/**
+ * @summary Create a new lesson (teachers only)
+ */
+export const teacherCreateLesson = async (newLessonInput: NewLessonInput, options?: RequestInit): Promise<Lesson> => {
+
+  return customFetch<Lesson>(getTeacherCreateLessonUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(newLessonInput)
+  }
+);}
+
+
+
+
+export const getTeacherCreateLessonMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof teacherCreateLesson>>, TError,{data: BodyType<NewLessonInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof teacherCreateLesson>>, TError,{data: BodyType<NewLessonInput>}, TContext> => {
+
+const mutationKey = ['teacherCreateLesson'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof teacherCreateLesson>>, {data: BodyType<NewLessonInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  teacherCreateLesson(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TeacherCreateLessonMutationResult = NonNullable<Awaited<ReturnType<typeof teacherCreateLesson>>>
+    export type TeacherCreateLessonMutationBody = BodyType<NewLessonInput>
+    export type TeacherCreateLessonMutationError = ErrorType<void>
+
+    /**
+ * @summary Create a new lesson (teachers only)
+ */
+export const useTeacherCreateLesson = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof teacherCreateLesson>>, TError,{data: BodyType<NewLessonInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof teacherCreateLesson>>,
+        TError,
+        {data: BodyType<NewLessonInput>},
+        TContext
+      > => {
+      return useMutation(getTeacherCreateLessonMutationOptions(options));
+    }
 
 export const getListCoursesUrl = (params?: ListCoursesParams,) => {
   const normalizedParams = new URLSearchParams();

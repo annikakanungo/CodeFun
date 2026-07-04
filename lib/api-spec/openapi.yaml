@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User accounts and roles
   - name: courses
     description: Grade-based course curriculum
   - name: lessons
@@ -43,6 +45,69 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /users/me:
+    get:
+      operationId: getMe
+      tags: [users]
+      summary: Get current user profile and role
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found (not yet onboarded)
+    post:
+      operationId: saveUserRole
+      tags: [users]
+      summary: Create or update current user role (onboarding)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRoleInput"
+      responses:
+        "200":
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          description: Invalid role
+        "401":
+          description: Unauthorized
+
+  /lessons:
+    post:
+      operationId: teacherCreateLesson
+      tags: [lessons]
+      summary: Create a new lesson (teachers only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewLessonInput"
+      responses:
+        "201":
+          description: Lesson created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+        "400":
+          description: Missing required fields
+        "401":
+          description: Unauthorized
+        "403":
+          description: Not a teacher
 
   /courses:
     get:
@@ -736,6 +801,57 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Course"
+
+    UserProfile:
+      type: object
+      required: [id, clerkId, role, createdAt]
+      properties:
+        id:
+          type: integer
+        clerkId:
+          type: string
+        role:
+          type: string
+          enum: [student, teacher]
+        displayName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+
+    UserRoleInput:
+      type: object
+      required: [role]
+      properties:
+        role:
+          type: string
+          enum: [student, teacher]
+        displayName:
+          type: string
+
+    NewLessonInput:
+      type: object
+      required: [courseId, title]
+      properties:
+        courseId:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        content:
+          type: string
+        objectives:
+          type: array
+          items:
+            type: string
+        durationMinutes:
+          type: integer
+          default: 45
+        videoUrl:
+          type: string
+        order:
+          type: integer
 
     ActivityItem:
       type: object

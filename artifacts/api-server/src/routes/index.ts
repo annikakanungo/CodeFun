@@ -7,10 +7,12 @@ import projectsRouter from "./projects";
 import teacherPlansRouter from "./teacher_plans";
 import progressRouter from "./progress";
 import statsRouter from "./stats";
+import usersRouter from "./users";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(usersRouter);
 router.use(coursesRouter);
 router.use(lessonsRouter);
 router.use(resourcesRouter);

@@ -196,6 +196,47 @@ export interface CoursesByGradeBand {
   secondary: Course[];
 }
 
+export type UserProfileRole = typeof UserProfileRole[keyof typeof UserProfileRole];
+
+
+export const UserProfileRole = {
+  student: 'student',
+  teacher: 'teacher',
+} as const;
+
+export interface UserProfile {
+  id: number;
+  clerkId: string;
+  role: UserProfileRole;
+  /** @nullable */
+  displayName?: string | null;
+  createdAt: string;
+}
+
+export type UserRoleInputRole = typeof UserRoleInputRole[keyof typeof UserRoleInputRole];
+
+
+export const UserRoleInputRole = {
+  student: 'student',
+  teacher: 'teacher',
+} as const;
+
+export interface UserRoleInput {
+  role: UserRoleInputRole;
+  displayName?: string;
+}
+
+export interface NewLessonInput {
+  courseId: number;
+  title: string;
+  description?: string;
+  content?: string;
+  objectives?: string[];
+  durationMinutes?: number;
+  videoUrl?: string;
+  order?: number;
+}
+
 export type ActivityItemType = typeof ActivityItemType[keyof typeof ActivityItemType];
 
 

@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
-import { BookOpen, Home, Code, Presentation, Trophy, Flame, Star, Sparkles, LogIn, UserPlus, LogOut } from "lucide-react";
+import { BookOpen, Home, Code, Presentation, Trophy, Flame, Star, Sparkles, LogIn, UserPlus, LogOut, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useGetStudentProgress, getGetStudentProgressQueryKey } from "@workspace/api-client-react";
+import { useGetStudentProgress, getGetStudentProgressQueryKey, useGetMe, getGetMeQueryKey } from "@workspace/api-client-react";
 import { motion } from "framer-motion";
 import { useUser, useClerk, Show } from "@clerk/react";
 
@@ -17,13 +17,19 @@ const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
-  const { user } = useUser();
+  const { user, isSignedIn } = useUser();
   const { signOut } = useClerk();
 
   // Fetch progress for XP and Level
   const { data: progress } = useGetStudentProgress("demo-student", {
     query: { queryKey: getGetStudentProgressQueryKey("demo-student") }
   });
+
+  // Fetch role to conditionally show teacher nav items
+  const { data: me } = useGetMe({
+    query: { queryKey: getGetMeQueryKey(), enabled: !!isSignedIn, retry: false }
+  });
+  const isTeacher = me?.role === "teacher";
 
   const xp = (progress?.completedLessons || 0) * 100;
   const level = Math.floor(xp / 500) + 1;
@@ -90,6 +96,20 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+            {isTeacher && (
+              <Link
+                href="/create-lesson"
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all relative overflow-hidden group",
+                  location.startsWith("/create-lesson")
+                    ? "text-white bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                    : "text-amber-300/80 hover:bg-amber-500/10 hover:text-amber-200"
+                )}
+              >
+                <Plus className={cn("w-5 h-5 transition-transform group-hover:scale-110", location.startsWith("/create-lesson") ? "text-amber-400" : "text-amber-400/60")} />
+                Create Lesson
+              </Link>
+            )}
           </nav>
         </div>
 

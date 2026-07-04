@@ -17,6 +17,65 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * @summary Get current user profile and role
+ */
+export const GetMeResponse = zod.object({
+  "id": zod.number(),
+  "clerkId": zod.string(),
+  "role": zod.enum(['student', 'teacher']),
+  "displayName": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Create or update current user role (onboarding)
+ */
+export const SaveUserRoleBody = zod.object({
+  "role": zod.enum(['student', 'teacher']),
+  "displayName": zod.string().optional()
+})
+
+export const SaveUserRoleResponse = zod.object({
+  "id": zod.number(),
+  "clerkId": zod.string(),
+  "role": zod.enum(['student', 'teacher']),
+  "displayName": zod.string().nullish(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
+ * @summary Create a new lesson (teachers only)
+ */
+export const teacherCreateLessonBodyDurationMinutesDefault = 45;
+
+export const TeacherCreateLessonBody = zod.object({
+  "courseId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string().optional(),
+  "content": zod.string().optional(),
+  "objectives": zod.array(zod.string()).optional(),
+  "durationMinutes": zod.number().default(teacherCreateLessonBodyDurationMinutesDefault),
+  "videoUrl": zod.string().optional(),
+  "order": zod.number().optional()
+})
+
+export const TeacherCreateLessonResponse = zod.object({
+  "id": zod.number(),
+  "courseId": zod.number(),
+  "title": zod.string(),
+  "description": zod.string().nullish(),
+  "order": zod.number(),
+  "durationMinutes": zod.number(),
+  "hasVideo": zod.boolean(),
+  "hasExercises": zod.boolean(),
+  "hasQuiz": zod.boolean(),
+  "videoUrl": zod.string().nullish()
+})
+
+
+/**
  * @summary List all courses
  */
 export const ListCoursesQueryParams = zod.object({

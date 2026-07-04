@@ -1,6 +1,7 @@
 import { Router, type IRouter } from "express";
+import { getAuth } from "@clerk/express";
 import { db } from "@workspace/db";
-import { lessonsTable, exercisesTable, quizzesTable, quizQuestionsTable, curriculumMappingsTable } from "@workspace/db";
+import { lessonsTable, exercisesTable, quizzesTable, quizQuestionsTable, curriculumMappingsTable, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 
 const router: IRouter = Router();
@@ -82,6 +83,60 @@ router.get("/lessons/:id/curriculum-mappings", async (req, res) => {
     strand: m.strand,
     grade: m.grade,
   })));
+});
+
+// POST /api/lessons — teacher creates a new lesson
+router.post("/lessons", async (req, res) => {
+  const { userId } = getAuth(req);
+  if (!userId) { res.status(401).json({ error: "Unauthorized" }); return; }
+
+  // Check the user is a teacher
+  const [user] = await db.select().from(usersTable).where(eq(usersTable.clerkId, userId)).limit(1);
+  if (!user || user.role !== "teacher") {
+    res.status(403).json({ error: "Only teachers can create lessons" });
+    return;
+  }
+
+  const { courseId, title, description, content, objectives, durationMinutes, videoUrl, order } = req.body as {
+    courseId: number;
+    title: string;
+    description?: string;
+    content?: string;
+    objectives?: string[];
+    durationMinutes?: number;
+    videoUrl?: string;
+    order?: number;
+  };
+
+  if (!courseId || !title?.trim()) {
+    res.status(400).json({ error: "courseId and title are required" });
+    return;
+  }
+
+  // Auto-assign order if not provided (append to end)
+  let lessonOrder = order;
+  if (!lessonOrder) {
+    const existing = await db.select({ order: lessonsTable.order })
+      .from(lessonsTable)
+      .where(eq(lessonsTable.courseId, courseId));
+    lessonOrder = existing.length > 0 ? Math.max(...existing.map(l => l.order)) + 1 : 1;
+  }
+
+  const [lesson] = await db.insert(lessonsTable).values({
+    courseId,
+    title: title.trim(),
+    description: description?.trim() ?? null,
+    content: content?.trim() ?? null,
+    objectives: objectives ?? [],
+    durationMinutes: durationMinutes ?? 45,
+    videoUrl: videoUrl?.trim() ?? null,
+    order: lessonOrder,
+    hasVideo: !!videoUrl,
+    hasExercises: false,
+    hasQuiz: false,
+  }).returning();
+
+  res.status(201).json(lesson);
 });
 
 export default router;

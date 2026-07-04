@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { useListTeacherPlans, getListTeacherPlansQueryKey } from "@workspace/api-client-react";
-import { BookOpen, GraduationCap, CheckSquare, Target, Clock, Presentation, Sparkles } from "lucide-react";
+import { BookOpen, GraduationCap, CheckSquare, Target, Clock, Presentation, Sparkles, Plus } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { PageTransition } from "@/components/PageTransition";
@@ -38,6 +39,16 @@ export default function TeacherHub() {
           <p className="text-lg md:text-xl text-slate-300 font-medium leading-relaxed max-w-xl">
             Ready-to-use lesson plans, assessment rubrics, and curriculum mappings to help you bring coding into your classroom.
           </p>
+          <Link href="/create-lesson">
+            <motion.button
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+              className="mt-2 inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-900 font-black px-6 py-3 rounded-2xl shadow-lg text-sm uppercase tracking-wider transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Create a Lesson
+            </motion.button>
+          </Link>
         </div>
         <div className="w-40 h-40 shrink-0 bg-white/5 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center relative z-10 shadow-2xl">
           <GraduationCap className="w-20 h-20 text-[#FFD700] fill-[#FFD700]/20" />

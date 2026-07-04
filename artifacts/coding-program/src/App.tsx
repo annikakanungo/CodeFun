@@ -18,6 +18,8 @@ import TeacherHub from '@/pages/teacher';
 import Progress from '@/pages/progress';
 import SignUpPage from '@/pages/sign-up';
 import SignInPage from '@/pages/sign-in';
+import OnboardingPage from '@/pages/onboarding';
+import CreateLessonPage from '@/pages/create-lesson';
 
 const queryClient = new QueryClient();
 
@@ -115,6 +117,7 @@ function AppRoutes() {
         <Route path="/projects" component={Projects} />
         <Route path="/teacher" component={TeacherHub} />
         <Route path="/progress/:studentId" component={Progress} />
+        <Route path="/create-lesson" component={CreateLessonPage} />
         <Route component={NotFound} />
       </Switch>
     </Shell>
@@ -131,6 +134,7 @@ function ClerkProviderWithRoutes() {
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
+      afterSignUpUrl={`${basePath}/onboarding`}
       routerPush={(to) => setLocation(stripBase(to))}
       routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
     >
@@ -140,6 +144,7 @@ function ClerkProviderWithRoutes() {
           <Switch>
             <Route path="/sign-in/*?" component={SignInPage} />
             <Route path="/sign-up/*?" component={SignUpPage} />
+            <Route path="/onboarding" component={OnboardingPage} />
             <Route component={AppRoutes} />
           </Switch>
           <Toaster />
