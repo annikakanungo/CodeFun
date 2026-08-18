@@ -1,4 +1,4 @@
-# CodePath — Free Coding Program
+# code.fun — Free Coding Program
 
 A free coding education platform for students in Grades 4–12. Offers grade-based courses, weekly lessons with videos and exercises, quizzes, student project showcase, teacher lesson plans, and Ontario curriculum expectation mappings.
 

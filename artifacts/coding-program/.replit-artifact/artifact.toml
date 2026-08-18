@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "Free Coding Program"
+title = "code.fun"
 version = "1.0.0"
 id = "artifacts/coding-program"
 router = "path"
