@@ -10,7 +10,6 @@ export type ActivityItemType = typeof ActivityItemType[keyof typeof ActivityItem
 
 
 export const ActivityItemType = {
-  project_submitted: 'project_submitted',
   lesson_completed: 'lesson_completed',
   badge_earned: 'badge_earned',
 } as const;

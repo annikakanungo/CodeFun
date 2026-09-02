@@ -273,22 +273,27 @@ export default function LessonDetail() {
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 space-y-10">
         
         {lesson.videoUrl && (
-          <div className="aspect-video bg-[#0f172a] rounded-3xl overflow-hidden border-2 shadow-2xl relative group flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#1e0a3c] to-[#312e81] opacity-90" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjAyIj48L3JlY3Q+Cjwvc3ZnPg==')] pointer-events-none mix-blend-overlay" />
-            
-            <div className="relative z-10 text-center space-y-6 transition-transform group-hover:scale-105 duration-500">
-              <motion.div 
-                className="w-24 h-24 rounded-full bg-[#FFD700] text-indigo-950 flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(255,215,0,0.4)] cursor-pointer hover:bg-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Play className="w-10 h-10 ml-2 fill-current" />
-              </motion.div>
-              <div>
-                <h3 className="text-white font-black text-2xl tracking-tight mb-1">Play Video Lesson</h3>
-                <p className="text-[#FFD700] font-bold text-sm uppercase tracking-widest">{lesson.durationMinutes} minutes</p>
-              </div>
+          <div className="aspect-video bg-[#0f172a] rounded-3xl overflow-hidden border-2 shadow-2xl relative">
+            <video
+              className="w-full h-full object-cover"
+              controls
+              playsInline
+              preload="metadata"
+              poster={`${basePath}/logo.svg`}
+              aria-label={`Video lesson: ${lesson.title}`}
+            >
+              <source
+                src={lesson.videoUrl.startsWith("http")
+                  ? lesson.videoUrl
+                  : `${basePath}${lesson.videoUrl.startsWith("/") ? lesson.videoUrl : `/${lesson.videoUrl}`}`}
+                type="video/mp4"
+              />
+              Your browser does not support video playback.
+            </video>
+            <div className="absolute top-4 left-4 pointer-events-none">
+              <span className="inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white backdrop-blur-sm">
+                <Play className="w-3.5 h-3.5 fill-current" /> Short lesson video
+              </span>
             </div>
           </div>
         )}

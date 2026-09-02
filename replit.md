@@ -1,6 +1,6 @@
 # code.fun — Free Coding Program
 
-A free coding education platform for students in Grades 4–12. Offers grade-based courses, weekly lessons with videos and exercises, quizzes, student project showcase, teacher lesson plans, and Ontario curriculum expectation mappings.
+A free coding education platform for students in Grades 4–12. Offers grade-based courses, weekly lessons with videos and exercises, quizzes, teacher lesson plans, and Ontario curriculum expectation mappings.
 
 ## Run & Operate
 
@@ -10,6 +10,7 @@ A free coding education platform for students in Grades 4–12. Offers grade-bas
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
+- `node scripts/seed-full-curriculum.mjs` — populate or refresh the complete Grades 4–12 curriculum
 - Required env: `DATABASE_URL` — Postgres connection string (auto-provided by Replit)
 
 ## Stack
@@ -26,9 +27,9 @@ A free coding education platform for students in Grades 4–12. Offers grade-bas
 ## Where things live
 
 - `lib/api-spec/openapi.yaml` — single source of truth for all API contracts
-- `lib/db/src/schema/` — Drizzle table definitions (courses, lessons, exercises, quizzes, resources, projects, teacher_plans, curriculum_mappings, progress_records)
-- `artifacts/api-server/src/routes/` — Express route handlers (courses, lessons, resources, projects, teacher_plans, progress, stats)
-- `artifacts/coding-program/src/` — React frontend (pages: Home, Courses, Course Detail, Lesson Detail, Projects, Resources, Teacher Hub, Student Progress)
+- `lib/db/src/schema/` — Drizzle table definitions (courses, lessons, exercises, quizzes, resources, teacher_plans, curriculum_mappings, progress_records)
+- `artifacts/api-server/src/routes/` — Express route handlers (courses, lessons, resources, teacher_plans, progress, stats)
+- `artifacts/coding-program/src/` — React frontend (pages: Home, Courses, Course Detail, Lesson Detail, Resources, Teacher Hub, Student Progress)
 - `lib/api-client-react/src/generated/` — generated React Query hooks (do not edit)
 - `lib/api-zod/src/generated/` — generated Zod schemas (do not edit)
 
@@ -44,8 +45,7 @@ A free coding education platform for students in Grades 4–12. Offers grade-bas
 - **Home**: Hero, grade journey progression, program stats, recent student activity feed
 - **Courses**: Browse by grade band; each card color-coded per course
 - **Course Detail**: Objectives, weekly topics, full lesson list with indicators
-- **Lesson Detail**: Video placeholder, content, exercises, quiz, curriculum mappings, teacher plan
-- **Projects**: Student showcase grid + submit form
+- **Lesson Detail**: Video, written content, exercises, quiz, curriculum mappings, teacher plan
 - **Resources**: Filterable library of free coding tools and tutorials
 - **Teacher Hub**: Lesson plans per grade with objectives, materials, activities, assessment ideas
 - **Student Progress**: Completion tracker with badges

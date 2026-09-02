@@ -112,30 +112,6 @@ export interface Resource {
   platform?: string | null;
 }
 
-export interface Project {
-  id: number;
-  studentName: string;
-  grade: number;
-  title: string;
-  description: string;
-  language: string;
-  /** @nullable */
-  projectUrl?: string | null;
-  /** @nullable */
-  codeSnippet?: string | null;
-  createdAt: string;
-}
-
-export interface ProjectInput {
-  studentName: string;
-  grade: number;
-  title: string;
-  description: string;
-  language: string;
-  projectUrl?: string;
-  codeSnippet?: string;
-}
-
 export interface TeacherPlan {
   id: number;
   /** @nullable */
@@ -185,7 +161,6 @@ export interface ProgramStats {
   totalCourses: number;
   totalLessons: number;
   totalStudents: number;
-  totalProjects: number;
   totalResources: number;
   gradeBreakdown: ProgramStatsGradeBreakdownItem[];
 }
@@ -241,7 +216,6 @@ export type ActivityItemType = typeof ActivityItemType[keyof typeof ActivityItem
 
 
 export const ActivityItemType = {
-  project_submitted: 'project_submitted',
   lesson_completed: 'lesson_completed',
   badge_earned: 'badge_earned',
 } as const;
@@ -285,11 +259,6 @@ grade?: number;
  * Filter by category (e.g. python, html, javascript)
  */
 category?: string;
-};
-
-export type ListProjectsParams = {
-grade?: number;
-limit?: number;
 };
 
 export type ListTeacherPlansParams = {

@@ -8,7 +8,6 @@ import { useUser, useClerk, Show } from "@clerk/react";
 const NAV_ITEMS = [
   { href: "/", label: "Home", icon: Home },
   { href: "/courses", label: "Courses", icon: BookOpen },
-  { href: "/projects", label: "Projects", icon: Code },
   { href: "/progress/demo-student", label: "Your Stats", icon: Trophy },
   { href: "/teacher", label: "Teacher Hub", icon: Presentation },
 ];

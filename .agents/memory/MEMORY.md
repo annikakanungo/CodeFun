@@ -1,0 +1,1 @@
+- [Workspace script dependency resolution](workspace-script-deps.md) — root utilities may need package-local resolution for workspace dependencies.

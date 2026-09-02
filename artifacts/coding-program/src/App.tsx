@@ -13,7 +13,6 @@ import Home from '@/pages/home';
 import Courses from '@/pages/courses';
 import CourseDetail from '@/pages/course-detail';
 import LessonDetail from '@/pages/lesson-detail';
-import Projects from '@/pages/projects';
 import TeacherHub from '@/pages/teacher';
 import Progress from '@/pages/progress';
 import SignUpPage from '@/pages/sign-up';
@@ -114,7 +113,6 @@ function AppRoutes() {
         <Route path="/courses" component={Courses} />
         <Route path="/courses/:id" component={CourseDetail} />
         <Route path="/lessons/:id" component={LessonDetail} />
-        <Route path="/projects" component={Projects} />
         <Route path="/teacher" component={TeacherHub} />
         <Route path="/progress/:studentId" component={Progress} />
         <Route path="/create-lesson" component={CreateLessonPage} />
@@ -134,7 +132,6 @@ function ClerkProviderWithRoutes() {
       appearance={clerkAppearance}
       signInUrl={`${basePath}/sign-in`}
       signUpUrl={`${basePath}/sign-up`}
-      afterSignUpUrl={`${basePath}/onboarding`}
       routerPush={(to) => setLocation(stripBase(to))}
       routerReplace={(to) => setLocation(stripBase(to), { replace: true })}
     >

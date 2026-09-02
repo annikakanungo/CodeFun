@@ -245,56 +245,6 @@ export const ListResourcesResponse = zod.array(ListResourcesResponseItem)
 
 
 /**
- * @summary List student projects
- */
-export const listProjectsQueryLimitDefault = 20;
-
-export const ListProjectsQueryParams = zod.object({
-  "grade": zod.coerce.number().optional(),
-  "limit": zod.coerce.number().default(listProjectsQueryLimitDefault)
-})
-
-export const ListProjectsResponseItem = zod.object({
-  "id": zod.number(),
-  "studentName": zod.string(),
-  "grade": zod.number(),
-  "title": zod.string(),
-  "description": zod.string(),
-  "language": zod.string(),
-  "projectUrl": zod.string().nullish(),
-  "codeSnippet": zod.string().nullish(),
-  "createdAt": zod.coerce.date()
-})
-export const ListProjectsResponse = zod.array(ListProjectsResponseItem)
-
-
-/**
- * @summary Submit a student project
- */
-export const SubmitProjectBody = zod.object({
-  "studentName": zod.string(),
-  "grade": zod.number(),
-  "title": zod.string(),
-  "description": zod.string(),
-  "language": zod.string(),
-  "projectUrl": zod.string().optional(),
-  "codeSnippet": zod.string().optional()
-})
-
-export const SubmitProjectResponse = zod.object({
-  "id": zod.number(),
-  "studentName": zod.string(),
-  "grade": zod.number(),
-  "title": zod.string(),
-  "description": zod.string(),
-  "language": zod.string(),
-  "projectUrl": zod.string().nullish(),
-  "codeSnippet": zod.string().nullish(),
-  "createdAt": zod.coerce.date()
-})
-
-
-/**
  * @summary List teacher lesson plans
  */
 export const ListTeacherPlansQueryParams = zod.object({
@@ -386,7 +336,6 @@ export const GetProgramStatsResponse = zod.object({
   "totalCourses": zod.number(),
   "totalLessons": zod.number(),
   "totalStudents": zod.number(),
-  "totalProjects": zod.number(),
   "totalResources": zod.number(),
   "gradeBreakdown": zod.array(zod.object({
   "grade": zod.number(),
@@ -433,7 +382,7 @@ export const GetCoursesByGradeBandResponse = zod.object({
 
 
 /**
- * @summary Recent student projects and activity feed
+ * @summary Recent lesson completion activity
  */
 export const getRecentActivityQueryLimitDefault = 10;
 
@@ -443,7 +392,7 @@ export const GetRecentActivityQueryParams = zod.object({
 
 export const GetRecentActivityResponseItem = zod.object({
   "id": zod.number(),
-  "type": zod.enum(['project_submitted', 'lesson_completed', 'badge_earned']),
+  "type": zod.enum(['lesson_completed', 'badge_earned']),
   "description": zod.string(),
   "grade": zod.number(),
   "studentName": zod.string().nullish(),

@@ -11,7 +11,6 @@ export interface ProgramStats {
   totalCourses: number;
   totalLessons: number;
   totalStudents: number;
-  totalProjects: number;
   totalResources: number;
   gradeBreakdown: ProgramStatsGradeBreakdownItem[];
 }

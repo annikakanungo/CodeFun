@@ -31,15 +31,12 @@ import type {
   Lesson,
   LessonDetail,
   ListCoursesParams,
-  ListProjectsParams,
   ListResourcesParams,
   ListTeacherPlansParams,
   NewLessonInput,
   ProgramStats,
   ProgressInput,
   ProgressRecord,
-  Project,
-  ProjectInput,
   Quiz,
   Resource,
   StudentProgress,
@@ -999,160 +996,6 @@ export function useListResources<TData = Awaited<ReturnType<typeof listResources
 
 
 
-export const getListProjectsUrl = (params?: ListProjectsParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/projects?${stringifiedParams}` : `/api/projects`
-}
-
-/**
- * @summary List student projects
- */
-export const listProjects = async (params?: ListProjectsParams, options?: RequestInit): Promise<Project[]> => {
-
-  return customFetch<Project[]>(getListProjectsUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getListProjectsQueryKey = (params?: ListProjectsParams,) => {
-    return [
-    `/api/projects`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListProjectsQueryOptions = <TData = Awaited<ReturnType<typeof listProjects>>, TError = ErrorType<unknown>>(params?: ListProjectsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProjects>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListProjectsQueryKey(params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listProjects>>> = ({ signal }) => listProjects(params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listProjects>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type ListProjectsQueryResult = NonNullable<Awaited<ReturnType<typeof listProjects>>>
-export type ListProjectsQueryError = ErrorType<unknown>
-
-
-/**
- * @summary List student projects
- */
-
-export function useListProjects<TData = Awaited<ReturnType<typeof listProjects>>, TError = ErrorType<unknown>>(
- params?: ListProjectsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listProjects>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getListProjectsQueryOptions(params,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-
-export const getSubmitProjectUrl = () => {
-
-
-
-
-  return `/api/projects`
-}
-
-/**
- * @summary Submit a student project
- */
-export const submitProject = async (projectInput: ProjectInput, options?: RequestInit): Promise<Project> => {
-
-  return customFetch<Project>(getSubmitProjectUrl(),
-  {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(projectInput)
-  }
-);}
-
-
-
-
-export const getSubmitProjectMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitProject>>, TError,{data: BodyType<ProjectInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof submitProject>>, TError,{data: BodyType<ProjectInput>}, TContext> => {
-
-const mutationKey = ['submitProject'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitProject>>, {data: BodyType<ProjectInput>}> = (props) => {
-          const {data} = props ?? {};
-
-          return  submitProject(data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SubmitProjectMutationResult = NonNullable<Awaited<ReturnType<typeof submitProject>>>
-    export type SubmitProjectMutationBody = BodyType<ProjectInput>
-    export type SubmitProjectMutationError = ErrorType<unknown>
-
-    /**
- * @summary Submit a student project
- */
-export const useSubmitProject = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitProject>>, TError,{data: BodyType<ProjectInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
- ): UseMutationResult<
-        Awaited<ReturnType<typeof submitProject>>,
-        TError,
-        {data: BodyType<ProjectInput>},
-        TContext
-      > => {
-      return useMutation(getSubmitProjectMutationOptions(options));
-    }
-
 export const getListTeacherPlansUrl = (params?: ListTeacherPlansParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -1631,7 +1474,7 @@ export const getGetRecentActivityUrl = (params?: GetRecentActivityParams,) => {
 }
 
 /**
- * @summary Recent student projects and activity feed
+ * @summary Recent lesson completion activity
  */
 export const getRecentActivity = async (params?: GetRecentActivityParams, options?: RequestInit): Promise<ActivityItem[]> => {
 
@@ -1678,7 +1521,7 @@ export type GetRecentActivityQueryError = ErrorType<unknown>
 
 
 /**
- * @summary Recent student projects and activity feed
+ * @summary Recent lesson completion activity
  */
 
 export function useGetRecentActivity<TData = Awaited<ReturnType<typeof getRecentActivity>>, TError = ErrorType<unknown>>(

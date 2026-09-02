@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/react';
 import { useSaveUserRole } from '@workspace/api-client-react';
 import { useLocation } from 'wouter';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { GraduationCap, Presentation, ArrowRight, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -63,12 +63,12 @@ export default function Onboarding() {
     }
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { staggerChildren: 0.15 } }
   };
 
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 30, scale: 0.95 },
     show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', bounce: 0.4 } }
   };

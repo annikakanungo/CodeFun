@@ -22,8 +22,6 @@ tags:
     description: Lesson quizzes
   - name: resources
     description: Free online learning resources
-  - name: projects
-    description: Student project showcase
   - name: teacher-plans
     description: Teacher lesson plans
   - name: curriculum
@@ -288,48 +286,6 @@ paths:
                 items:
                   $ref: "#/components/schemas/Resource"
 
-  /projects:
-    get:
-      operationId: listProjects
-      tags: [projects]
-      summary: List student projects
-      parameters:
-        - name: grade
-          in: query
-          schema:
-            type: integer
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            default: 20
-      responses:
-        "200":
-          description: Student projects
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Project"
-    post:
-      operationId: submitProject
-      tags: [projects]
-      summary: Submit a student project
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ProjectInput"
-      responses:
-        "201":
-          description: Project submitted
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Project"
-
   /teacher-plans:
     get:
       operationId: listTeacherPlans
@@ -439,7 +395,7 @@ paths:
     get:
       operationId: getRecentActivity
       tags: [stats]
-      summary: Recent student projects and activity feed
+      summary: Recent lesson completion activity
       parameters:
         - name: limit
           in: query
@@ -632,49 +588,6 @@ components:
         platform:
           type: ["string", "null"]
 
-    Project:
-      type: object
-      required: [id, studentName, grade, title, description, language, createdAt]
-      properties:
-        id:
-          type: integer
-        studentName:
-          type: string
-        grade:
-          type: integer
-        title:
-          type: string
-        description:
-          type: string
-        language:
-          type: string
-        projectUrl:
-          type: ["string", "null"]
-        codeSnippet:
-          type: ["string", "null"]
-        createdAt:
-          type: string
-          format: date-time
-
-    ProjectInput:
-      type: object
-      required: [studentName, grade, title, description, language]
-      properties:
-        studentName:
-          type: string
-        grade:
-          type: integer
-        title:
-          type: string
-        description:
-          type: string
-        language:
-          type: string
-        projectUrl:
-          type: string
-        codeSnippet:
-          type: string
-
     TeacherPlan:
       type: object
       required: [id, lessonId, grade, title, objectives, materials, activities, assessmentIdeas, durationMinutes]
@@ -762,15 +675,13 @@ components:
 
     ProgramStats:
       type: object
-      required: [totalCourses, totalLessons, totalStudents, totalProjects, totalResources, gradeBreakdown]
+      required: [totalCourses, totalLessons, totalStudents, totalResources, gradeBreakdown]
       properties:
         totalCourses:
           type: integer
         totalLessons:
           type: integer
         totalStudents:
-          type: integer
-        totalProjects:
           type: integer
         totalResources:
           type: integer
@@ -861,7 +772,7 @@ components:
           type: integer
         type:
           type: string
-          enum: [project_submitted, lesson_completed, badge_earned]
+          enum: [lesson_completed, badge_earned]
         description:
           type: string
         grade:

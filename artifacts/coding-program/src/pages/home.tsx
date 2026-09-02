@@ -1,9 +1,9 @@
 import { useGetProgramStats, useGetRecentActivity, getGetProgramStatsQueryKey, getGetRecentActivityQueryKey } from "@workspace/api-client-react";
-import { Code, BookOpen, Trophy, ArrowRight, Activity, Users, Sparkles, Rocket } from "lucide-react";
+import { Code, BookOpen, ArrowRight, Activity, Users, Sparkles, Rocket } from "lucide-react";
 import { Link } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
 
 export default function Home() {
@@ -15,7 +15,7 @@ export default function Home() {
     query: { queryKey: getGetRecentActivityQueryKey({ limit: 5 }) },
   });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -25,7 +25,7 @@ export default function Home() {
     }
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
@@ -67,11 +67,6 @@ export default function Home() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link href="/courses" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#FFD700] to-orange-500 text-indigo-950 px-8 py-4 rounded-2xl font-black text-lg hover:shadow-lg hover:shadow-orange-500/30 transition-all animate-pulse-glow">
                 Let's Go <Rocket className="w-5 h-5" />
-              </Link>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/projects" className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all">
-                See Student Projects
               </Link>
             </motion.div>
           </div>
@@ -151,11 +146,10 @@ export default function Home() {
         {/* Stats */}
         <div className="lg:col-span-2 space-y-6">
           <h2 className="text-2xl font-black font-heading tracking-tight">Global Stats</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <StatCard icon={BookOpen} label="Courses" value={stats?.totalCourses} isLoading={statsLoading} color="text-blue-500" bg="bg-blue-100 dark:bg-blue-900/30" />
             <StatCard icon={Code} label="Lessons" value={stats?.totalLessons} isLoading={statsLoading} color="text-violet-500" bg="bg-violet-100 dark:bg-violet-900/30" />
             <StatCard icon={Users} label="Students" value={stats?.totalStudents} isLoading={statsLoading} color="text-emerald-500" bg="bg-emerald-100 dark:bg-emerald-900/30" />
-            <StatCard icon={Trophy} label="Projects" value={stats?.totalProjects} isLoading={statsLoading} color="text-amber-500" bg="bg-amber-100 dark:bg-amber-900/30" />
           </div>
           
           <div className="bg-card border-2 rounded-3xl p-8 shadow-sm">
@@ -217,12 +211,10 @@ export default function Home() {
                 <div key={activity.id} className="flex gap-4 items-start relative before:absolute before:left-5 before:top-10 before:bottom-[-24px] before:w-0.5 before:bg-border last:before:hidden">
                   <div className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-4 bg-background z-10 shadow-sm",
-                    activity.type === "project_submitted" ? "border-indigo-500 text-indigo-500 bg-indigo-50 dark:bg-indigo-950" :
                     activity.type === "badge_earned" ? "border-amber-400 text-amber-500 bg-amber-50 dark:bg-amber-950" :
                     "border-teal-400 text-teal-500 bg-teal-50 dark:bg-teal-950"
                   )}>
-                    {activity.type === "project_submitted" ? <Code className="w-4 h-4" /> :
-                     activity.type === "badge_earned" ? <Trophy className="w-4 h-4" /> :
+                    {activity.type === "badge_earned" ? <Rocket className="w-4 h-4" /> :
                      <BookOpen className="w-4 h-4" />}
                   </div>
                   <div className="pt-1">
