@@ -20,6 +20,38 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
 import { useUser } from "@clerk/react";
 
+type CodeRunResult = {
+  status: "success" | "error";
+  message: string;
+  output?: string;
+};
+
+const isBrowserPreview = (language: string) => {
+  const normalized = language.toLowerCase();
+  return normalized.includes("html") || normalized.includes("javascript");
+};
+
+const createJavaScriptPreview = (exerciseId: number, code: string) => `<!doctype html>
+<html>
+  <body style="margin:0;padding:16px;font-family:system-ui,sans-serif;background:#f8fafc;color:#172033">
+    <div id="app"></div>
+    <script>
+      const messages = [];
+      const originalLog = console.log;
+      console.log = (...values) => {
+        messages.push(values.map(value => typeof value === "object" ? JSON.stringify(value) : String(value)).join(" "));
+        originalLog(...values);
+      };
+      try {
+        new Function(${JSON.stringify(code)})();
+        window.parent.postMessage({ type: "code-fun-preview", exerciseId: ${exerciseId}, status: "success", output: messages.join("\\n") }, "*");
+      } catch (error) {
+        window.parent.postMessage({ type: "code-fun-preview", exerciseId: ${exerciseId}, status: "error", output: error instanceof Error ? error.message : String(error) }, "*");
+      }
+    </script>
+  </body>
+</html>`;
+
 function LessonGate({ lessonTitle, courseId }: { lessonTitle?: string; courseId?: number }) {
   return (
     <PageTransition>
@@ -141,6 +173,11 @@ export default function LessonDetail() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
+  const [draftCode, setDraftCode] = useState<Record<number, string>>({});
+  const [codeRunResults, setCodeRunResults] = useState<Record<number, CodeRunResult>>({});
+  const [previewCode, setPreviewCode] = useState<Record<number, string>>({});
+  const [readingMode, setReadingMode] = useState(false);
 
   const { data: lesson, isLoading: lessonLoading } = useGetLesson(lessonId, {
     query: { enabled: !!lessonId, queryKey: getGetLessonQueryKey(lessonId) }
@@ -160,6 +197,45 @@ export default function LessonDetail() {
 
   const recordProgress = useRecordProgress();
 
+  useEffect(() => {
+    setReadingMode(window.localStorage.getItem("codefun-reading-mode") === "true");
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("codefun-reading-mode", String(readingMode));
+  }, [readingMode]);
+
+  useEffect(() => {
+    const handlePreviewMessage = (event: MessageEvent<{
+      type?: string;
+      exerciseId?: number;
+      status?: "success" | "error";
+      output?: string;
+    }>) => {
+      if (
+        event.data?.type !== "code-fun-preview" ||
+        typeof event.data.exerciseId !== "number" ||
+        !event.data.status
+      ) return;
+
+      const exerciseId = event.data.exerciseId;
+      const status = event.data.status;
+      setCodeRunResults((current) => ({
+        ...current,
+        [exerciseId]: {
+          status,
+          message: status === "success"
+            ? "Your JavaScript ran in the safe browser preview."
+            : "Your JavaScript has an error. Read the message and try again.",
+          output: event.data.output,
+        },
+      }));
+    };
+
+    window.addEventListener("message", handlePreviewMessage);
+    return () => window.removeEventListener("message", handlePreviewMessage);
+  }, []);
+
   const handleCompleteLesson = () => {
     recordProgress.mutate({
       data: { studentId: "demo-student", lessonId }
@@ -171,12 +247,65 @@ export default function LessonDetail() {
     });
   };
 
-  const handleQuizSubmit = (e: React.FormEvent) => {
+  const handleQuizSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Fake grading logic - just random for demo
-    const score = Math.floor(Math.random() * 3) + 1; // 1 to 3 stars
-    setQuizScore(score);
+    const formData = new FormData(e.currentTarget);
+    const answers = quiz?.questions.reduce<Record<number, number>>((result, question) => {
+      const answer = formData.get(`q-${question.id}`);
+      if (typeof answer === "string") result[question.id] = Number(answer);
+      return result;
+    }, {}) ?? {};
+    const correctAnswers = quiz?.questions.filter((question) => answers[question.id] === question.correctIndex).length ?? 0;
+    const percentage = quiz?.questions.length ? correctAnswers / quiz.questions.length : 0;
+    setQuizAnswers(answers);
+    setQuizScore(Math.round(percentage * 3));
     setQuizSubmitted(true);
+  };
+
+  const handleRunExercise = (exercise: NonNullable<typeof exercises>[number]) => {
+    const code = (draftCode[exercise.id] ?? exercise.starterCode).trim();
+    const language = exercise.language.toLowerCase();
+
+    if (!code) {
+      setCodeRunResults((current) => ({
+        ...current,
+        [exercise.id]: { status: "error", message: "Add some code before you run it." },
+      }));
+      return;
+    }
+
+    if (language.includes("javascript")) {
+      setPreviewCode((current) => ({ ...current, [exercise.id]: createJavaScriptPreview(exercise.id, code) }));
+      setCodeRunResults((current) => ({
+        ...current,
+        [exercise.id]: { status: "success", message: "Running your JavaScript in a safe browser preview..." },
+      }));
+      return;
+    }
+
+    if (language.includes("html")) {
+      setPreviewCode((current) => ({ ...current, [exercise.id]: code }));
+      setCodeRunResults((current) => ({
+        ...current,
+        [exercise.id]: { status: "success", message: "Your HTML preview is ready below." },
+      }));
+      return;
+    }
+
+    const changed = code !== exercise.starterCode.trim();
+    setCodeRunResults((current) => ({
+      ...current,
+      [exercise.id]: changed
+        ? {
+            status: "success",
+            message: "Nice start! You changed the example. Compare your result with the expected outcome and test one more case.",
+            output: exercise.expectedOutput ?? undefined,
+          }
+        : {
+            status: "error",
+            message: "Make one small change to the example, then run it again.",
+          },
+    }));
   };
 
   // Show gate for signed-out users (wait for Clerk to load first)
@@ -256,15 +385,26 @@ export default function LessonDetail() {
               <h1 className="text-2xl font-black font-heading tracking-tight leading-none">{lesson.title}</h1>
             </div>
           </div>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button 
-              onClick={handleCompleteLesson} 
-              disabled={recordProgress.isPending || showCelebration} 
-              className="gap-2 rounded-xl font-black text-base h-12 px-6 bg-gradient-to-r from-primary to-[#a855f7] hover:shadow-lg hover:shadow-primary/30 text-white w-full md:w-auto"
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+            <Button
+              type="button"
+              variant="outline"
+              aria-pressed={readingMode}
+              onClick={() => setReadingMode((current) => !current)}
+              className="gap-2 rounded-xl font-black text-sm h-12 px-5 border-2 w-full sm:w-auto"
             >
-              <CheckCircle className="w-5 h-5" /> Done! Claim XP
+              <BookOpen className="w-4 h-4" /> {readingMode ? "Exit reading mode" : "Reading mode"}
             </Button>
-          </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                onClick={handleCompleteLesson}
+                disabled={recordProgress.isPending || showCelebration}
+                className="gap-2 rounded-xl font-black text-base h-12 px-6 bg-gradient-to-r from-primary to-[#a855f7] hover:shadow-lg hover:shadow-primary/30 text-white w-full md:w-auto"
+              >
+                <CheckCircle className="w-5 h-5" /> Done! Claim XP
+              </Button>
+            </motion.div>
+          </div>
         </div>
       </div>
 
@@ -272,16 +412,16 @@ export default function LessonDetail() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full justify-start border-b-2 rounded-none h-auto p-0 bg-transparent gap-2 md:gap-6 overflow-x-auto no-scrollbar">
             <TabsTrigger value="content" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-2 py-4 font-black text-sm md:text-base text-muted-foreground uppercase tracking-wider">
-              <BookOpen className="w-5 h-5 mr-2 mb-0.5" /> Intel
+              <BookOpen className="w-5 h-5 mr-2 mb-0.5" /> Lesson
             </TabsTrigger>
             {lesson.hasExercises && (
               <TabsTrigger value="exercises" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-2 py-4 font-black text-sm md:text-base text-muted-foreground uppercase tracking-wider">
-                <Code className="w-5 h-5 mr-2 mb-0.5" /> Code
+                <Code className="w-5 h-5 mr-2 mb-0.5" /> Practice
               </TabsTrigger>
             )}
             {lesson.hasQuiz && (
               <TabsTrigger value="quiz" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-2 py-4 font-black text-sm md:text-base text-muted-foreground uppercase tracking-wider">
-                <HelpCircle className="w-5 h-5 mr-2 mb-0.5" /> Boss Fight
+                <HelpCircle className="w-5 h-5 mr-2 mb-0.5" /> Quiz
               </TabsTrigger>
             )}
             <TabsTrigger value="teacher" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-4 data-[state=active]:border-slate-500 data-[state=active]:text-slate-700 dark:data-[state=active]:text-slate-300 rounded-none px-2 py-4 font-black text-sm md:text-base text-muted-foreground uppercase tracking-wider ml-auto">
@@ -291,8 +431,23 @@ export default function LessonDetail() {
 
           <div className="mt-10">
             <TabsContent value="content" className="space-y-10 animate-in fade-in-50 duration-500 m-0">
-              <div className="bg-card border-2 rounded-3xl p-8 md:p-12 shadow-sm">
-                <div className="prose prose-lg dark:prose-invert max-w-none font-sans font-medium text-foreground/90 leading-relaxed marker:text-primary" dangerouslySetInnerHTML={{ __html: lesson.content || "<p>No content provided.</p>" }} />
+              {readingMode && (
+                <div className="bg-primary/5 border-2 border-primary/20 rounded-2xl px-5 py-4 text-sm font-bold text-primary flex items-center gap-3">
+                  <BookOpen className="w-5 h-5 shrink-0" />
+                  Reading mode is on: larger text, wider spacing, and fewer distractions.
+                </div>
+              )}
+              <div className={cn(
+                "bg-card border-2 rounded-3xl p-8 md:p-12 shadow-sm",
+                readingMode && "md:p-16 shadow-none"
+              )}>
+                <div
+                  className={cn(
+                    "prose prose-lg dark:prose-invert max-w-none font-sans font-medium text-foreground/90 leading-relaxed marker:text-primary",
+                    readingMode && "max-w-3xl mx-auto text-xl leading-[2]"
+                  )}
+                  dangerouslySetInnerHTML={{ __html: lesson.content || "<p>No content provided.</p>" }}
+                />
               </div>
 
               {lesson.objectives && lesson.objectives.length > 0 && (
@@ -339,12 +494,58 @@ export default function LessonDetail() {
                     </div>
                     
                     <div className="bg-[#0f172a] p-4 flex flex-col relative">
-                      <div className="absolute top-4 right-4 z-10 flex gap-2">
-                        <Button size="sm" className="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black text-xs rounded-lg shadow-lg">Run Code <Play className="w-3 h-3 ml-1 fill-white" /></Button>
+                      <div className="flex items-center justify-between gap-3 mb-3">
+                        <span className="text-xs font-bold text-slate-400">
+                          {isBrowserPreview(exercise.language) ? "Safe browser preview" : "Guided practice"}
+                        </span>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => handleRunExercise(exercise)}
+                          className="bg-[#22c55e] hover:bg-[#16a34a] text-white font-black text-xs rounded-lg shadow-lg"
+                        >
+                          {isBrowserPreview(exercise.language) ? "Run Preview" : "Check My Work"}
+                          <Play className="w-3 h-3 ml-1 fill-white" />
+                        </Button>
                       </div>
-                      <pre className="text-green-400 font-mono text-sm overflow-auto p-4 flex-1 outline-none font-medium leading-relaxed bg-[#1e293b] rounded-xl border border-slate-700/50 shadow-inner" contentEditable suppressContentEditableWarning spellCheck={false}>
-                        {exercise.starterCode}
-                      </pre>
+                      <textarea
+                        aria-label={`Code editor for ${exercise.title}`}
+                        value={draftCode[exercise.id] ?? exercise.starterCode}
+                        onChange={(event) => setDraftCode((current) => ({
+                          ...current,
+                          [exercise.id]: event.target.value,
+                        }))}
+                        spellCheck={false}
+                        className="text-green-400 font-mono text-sm min-h-[260px] resize-y overflow-auto p-4 flex-1 outline-none font-medium leading-relaxed bg-[#1e293b] rounded-xl border border-slate-700/50 shadow-inner focus:border-primary focus:ring-2 focus:ring-primary/30"
+                      />
+                      {codeRunResults[exercise.id] && (
+                        <div
+                          role="status"
+                          className={cn(
+                            "mt-3 rounded-xl border px-4 py-3 text-sm font-semibold",
+                            codeRunResults[exercise.id].status === "success"
+                              ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                              : "border-rose-400/40 bg-rose-400/10 text-rose-200"
+                          )}
+                        >
+                          <p>{codeRunResults[exercise.id].message}</p>
+                          {codeRunResults[exercise.id].output && (
+                            <pre className="mt-2 whitespace-pre-wrap text-xs text-slate-300">
+                              Expected outcome: {codeRunResults[exercise.id].output}
+                            </pre>
+                          )}
+                        </div>
+                      )}
+                      {previewCode[exercise.id] && (
+                        <div className="mt-3 overflow-hidden rounded-xl border border-slate-600 bg-white">
+                          <iframe
+                            title={`Preview for ${exercise.title}`}
+                            srcDoc={previewCode[exercise.id]}
+                            sandbox="allow-scripts"
+                            className="h-48 w-full"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -359,7 +560,7 @@ export default function LessonDetail() {
                   {!quizSubmitted ? (
                     <form onSubmit={handleQuizSubmit}>
                       <h3 className="text-3xl font-black font-heading mb-10 flex items-center gap-3 tracking-tight border-b-2 pb-6">
-                        <HelpCircle className="w-8 h-8 text-primary" /> Boss Fight Quiz
+                        <HelpCircle className="w-8 h-8 text-primary" /> Quick Quiz
                       </h3>
                       <div className="space-y-12">
                         {quiz.questions.map((q, i) => (
@@ -368,7 +569,7 @@ export default function LessonDetail() {
                             <div className="space-y-3">
                               {q.options.map((opt, j) => (
                                 <label key={j} className="flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer hover:bg-muted/50 transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5 group">
-                                  <input type="radio" name={`q-${q.id}`} className="w-5 h-5 accent-primary border-2" required />
+                                  <input type="radio" name={`q-${q.id}`} value={j} className="w-5 h-5 accent-primary border-2" required />
                                   <span className="text-base font-medium group-hover:text-primary transition-colors">{opt}</span>
                                 </label>
                               ))}
@@ -385,6 +586,9 @@ export default function LessonDetail() {
                   ) : (
                     <div className="text-center py-10">
                       <h3 className="text-3xl font-black mb-8 tracking-tight">Quiz Results</h3>
+                      <p className="text-lg font-bold text-muted-foreground mb-6">
+                        {quiz.questions.filter((question) => quizAnswers[question.id] === question.correctIndex).length} of {quiz.questions.length} correct
+                      </p>
                       <div className="flex justify-center gap-4 mb-8">
                         {Array.from({ length: 3 }).map((_, i) => (
                           <motion.div
@@ -400,7 +604,30 @@ export default function LessonDetail() {
                       <p className="text-2xl font-bold mb-8">
                         {quizScore === 3 ? "Flawless Victory!" : quizScore === 2 ? "Great Job!" : "Keep practicing!"}
                       </p>
-                      <Button onClick={() => setQuizSubmitted(false)} variant="outline" className="rounded-xl font-bold border-2">Retry Quiz</Button>
+                      <div className="text-left space-y-3 mb-8">
+                        {quiz.questions.map((question) => {
+                          const isCorrect = quizAnswers[question.id] === question.correctIndex;
+                          return (
+                            <div key={question.id} className={cn(
+                              "rounded-xl border-2 px-4 py-3 text-sm font-semibold",
+                              isCorrect ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-rose-200 bg-rose-50 text-rose-800"
+                            )}>
+                              <p>{isCorrect ? "Correct" : "Not quite"}: {question.question}</p>
+                              {!isCorrect && <p className="mt-1">Correct answer: {question.options[question.correctIndex]}</p>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <Button
+                        onClick={() => {
+                          setQuizAnswers({});
+                          setQuizSubmitted(false);
+                        }}
+                        variant="outline"
+                        className="rounded-xl font-bold border-2"
+                      >
+                        Retry Quiz
+                      </Button>
                     </div>
                   )}
                 </div>
