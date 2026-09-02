@@ -1,0 +1,170 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "8D40fADmAsD6oHIBrIIBU"
+uri = "file://artifacts/coding-program/public/videos/lesson-1.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 1"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "b275c867-e6e9-4dd0-9cf7-8e62ad76ff05"
+content_hash = "sha256:2ec4d66e5df9404d714ee0b9ede16eb7d13cdf9d737e123500fdf89b34ccf393"
+size = 6523251
+mtime_ms = 1788382243374
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/b275c867-e6e9-4dd0-9cf7-8e62ad76ff05/b07ccd31-f9b8-4cd8-90f6-e23d8522a435"
+storage_version_token = "1788382346140233"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "wm4iIyvSQPfuqDhQAN941"
+uri = "file://artifacts/coding-program/public/videos/lesson-2.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 2"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "f44fbc80-bfda-49d5-b4bc-0f60b3e294f6"
+content_hash = "sha256:21a8591ec6988ca0eb71c35d98ea250d674ba4e87e908259e032a5c5172113da"
+size = 3572950
+mtime_ms = 1788382249505
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/f44fbc80-bfda-49d5-b4bc-0f60b3e294f6/b160d896-6ab7-42d5-a3eb-d43b269577eb"
+storage_version_token = "1788382346613293"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "YKZkssym1IeRa0Je2L3mf"
+uri = "file://artifacts/coding-program/public/videos/lesson-3.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 3"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "82ad2663-3118-4621-9bb7-5a1f96274bce"
+content_hash = "sha256:fa402bcf83f2c9a583af53a22bd683390692b6c4b826c174d3e576ba15b2747d"
+size = 4469491
+mtime_ms = 1788382255717
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/82ad2663-3118-4621-9bb7-5a1f96274bce/bb1f315e-17fd-4119-a987-8be24ef50f07"
+storage_version_token = "1788382347111489"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "Bd96dcojeZAqO6V3hUPYP"
+uri = "file://artifacts/coding-program/public/videos/lesson-4.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 4"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "78486ee6-230c-42d5-884a-ca41d548bd98"
+content_hash = "sha256:dfc98fe34673f31f0d55a99672492160f3349c1c713a1a4c1755ee478527fc9c"
+size = 8311846
+mtime_ms = 1788382262810
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/78486ee6-230c-42d5-884a-ca41d548bd98/b5ddf84c-3d7d-4b8c-9b0f-fe238c30a415"
+storage_version_token = "1788382347708635"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "w-OvbkoB3r7q5M0YdBBTl"
+uri = "file://artifacts/coding-program/public/videos/lesson-5.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 5"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "87a2428a-c7b8-4e33-a364-98880bbd4237"
+content_hash = "sha256:19990de20ced556ab96b607e1921e12b89b4a070a332345564e4c93180c26f0d"
+size = 4820383
+mtime_ms = 1788382268951
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/87a2428a-c7b8-4e33-a364-98880bbd4237/6f8625ba-12ca-47d4-b074-132be42534a5"
+storage_version_token = "1788382348295824"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "1ZYub1aFy1WJH9SVLaxsa"
+uri = "file://artifacts/coding-program/public/videos/lesson-6.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 6"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "b1a68408-52c4-4cb9-96bb-46c506b976b3"
+content_hash = "sha256:d8de3628fe06f95cec3ca6c847ce5a25bd4206508b350dd7df55c0d2eb77021a"
+size = 5848878
+mtime_ms = 1788382275623
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/b1a68408-52c4-4cb9-96bb-46c506b976b3/f473f4e3-9fb3-45db-974b-9dd9a56c8cb8"
+storage_version_token = "1788382348859241"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "WeJFmkYT6jnp6fsFOFqiz"
+uri = "file://artifacts/coding-program/public/videos/lesson-7.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 7"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "3a1615c1-7f52-4f94-a33f-5a970632f5f6"
+content_hash = "sha256:e91798d462420bb167d2297681761f6827b4a12da15ff13d1f3c809dd38ba621"
+size = 2100252
+mtime_ms = 1788382281290
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/3a1615c1-7f52-4f94-a33f-5a970632f5f6/115398de-3b3b-4697-b51e-f55bf70cd17a"
+storage_version_token = "1788382349404860"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "vpZN9atP6tWvQ9QNtVx-A"
+uri = "file://artifacts/coding-program/public/videos/lesson-8.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 8"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "90a2b0e1-be58-4494-9173-5e3de9a7323a"
+content_hash = "sha256:4c26c602f513067a82245b9bbad514c77bba7e681b3c0a9a99ccae816c65a27b"
+size = 2880127
+mtime_ms = 1788382287074
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/90a2b0e1-be58-4494-9173-5e3de9a7323a/64548495-ac83-41b5-ad71-f639ad905002"
+storage_version_token = "1788382349950371"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "AqXBeKi0Se9RdAeciSxEv"
+uri = "file://artifacts/coding-program/public/videos/lesson-9.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 9"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "7e094bea-5466-4dbf-8950-d702cb12ee1e"
+content_hash = "sha256:3052d6d82563447061f827a3d3f35f556affb3bcd4420c0d6b389db0dbd85e77"
+size = 1911952
+mtime_ms = 1788382291845
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/7e094bea-5466-4dbf-8950-d702cb12ee1e/6e8b11dd-288f-4b22-ae65-91d55008095a"
+storage_version_token = "1788382350553635"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "csS1cYPgkIjgaIVctMmRB"
+uri = "file://artifacts/coding-program/public/videos/lesson-10.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 10"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "5434469e-85c6-4d46-9aa7-d004d2697a35"
+content_hash = "sha256:7cb354a0bf931a5854df3386f719ad73c033e96a268ed8d13dd0f9b8207a073c"
+size = 556817
+mtime_ms = 1788382295855
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/5434469e-85c6-4d46-9aa7-d004d2697a35/e2fbcb8d-fe61-4325-b1fa-978803a760c3"
+storage_version_token = "1788382351024507"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "-37P7ihCXvMwhScnnHgpr"
+uri = "file://artifacts/coding-program/public/videos/lesson-11.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 11"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "5ed2b7eb-9f95-4631-89e3-716d08181bba"
+content_hash = "sha256:9ccbd1c00afc066d477b36b401b685a289069268b7cee556cbaf2eed7621e568"
+size = 629862
+mtime_ms = 1788382300487
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/5ed2b7eb-9f95-4631-89e3-716d08181bba/2b59e94c-bd13-4d21-9fe1-c015a927a568"
+storage_version_token = "1788382351483211"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "HKGj7TpnafPNAFHfPXMl9"
+uri = "file://artifacts/coding-program/public/videos/lesson-12.mp4"
+type = "video"
+title = "Whiteboard Lesson Video 12"
+description = "720p whiteboard-sketch lesson video with warm paper and ink-outline treatment."
+logical_id = "1174e104-30d4-40cd-b50f-95d4ae8f8aaa"
+content_hash = "sha256:7a7134b668128b19c7ee9cec6793976c320ac38295be1564788e0b2939d578da"
+size = 2621993
+mtime_ms = 1788382307204
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:a42c1b51-a09e-4547-8866-6d70fb3abf0d/1174e104-30d4-40cd-b50f-95d4ae8f8aaa/732e6966-642a-47a5-a607-4b19f7ea4188"
+storage_version_token = "1788382351960970"
+content_type = "video/mp4"
