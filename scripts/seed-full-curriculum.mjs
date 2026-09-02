@@ -205,27 +205,37 @@ const quizFor = (entry) => [
   },
 ];
 
-const contentFor = (entry, language) => `## Goal
-${entry.description}
+const escapeHtml = (value) => String(value ?? "")
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
 
-## Core idea
-${entry.focus[0].toUpperCase() + entry.focus.slice(1)}. Good developers make the idea visible by naming data clearly, taking one small step at a time, and checking the result after each change.
+const contentFor = (entry, language) => {
+  const focus = entry.focus[0].toUpperCase() + entry.focus.slice(1);
+  return `<h3>Goal</h3>
+<p>${escapeHtml(entry.description)}</p>
 
-## Example
-\`\`\`${language.split(" ")[0].toLowerCase()}
-${entry.example}
-\`\`\`
+<h3>Core idea</h3>
+<p>${escapeHtml(focus)}. Good developers make the idea visible by naming data clearly, taking one small step at a time, and checking the result after each change.</p>
 
-## Try it
-${entry.practice}
+<h3>Example</h3>
+<pre><code>${escapeHtml(entry.example)}</code></pre>
 
-## Check your thinking
-- What input does this example expect?
-- What would change if one value were different?
-- How could you test an edge case?
+<h3>Try it</h3>
+<p>${escapeHtml(entry.practice)}</p>
 
-## Wrap-up
-Explain the idea in your own words, then make one small improvement to the example.`;
+<h3>Check your thinking</h3>
+<ul>
+  <li>What input does this example expect?</li>
+  <li>What would change if one value were different?</li>
+  <li>How could you test an edge case?</li>
+</ul>
+
+<h3>Wrap-up</h3>
+<p>Explain the idea in your own words, then make one small improvement to the example.</p>`;
+};
 
 const client = new Client({ connectionString: process.env.DATABASE_URL });
 await client.connect();
