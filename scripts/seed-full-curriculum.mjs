@@ -22,6 +22,7 @@ const lesson = (title, description, focus, example, practice, objectives = []) =
 const courseCatalog = [
   {
     id: 1,
+    description: "Welcome to your first coding adventure. In this beginner-friendly Grade 4 course, students learn how computers follow instructions, then use Python to create programs with variables, decisions, loops, and keyboard input. By the end, every learner will build a simple number-guessing game.",
     objectives: ["Think in steps", "Write beginner Python programs", "Use variables, decisions, loops, and input"],
     weeklyTopics: ["Algorithms and instructions", "Variables and data", "Conditions", "Loops", "Input", "Number Guesser project"],
     lessons: [
@@ -35,6 +36,7 @@ const courseCatalog = [
   },
   {
     id: 2,
+    description: "Python Adventures helps Grade 5 learners move from simple instructions to programs that work with collections of information. Students explore strings, lists, functions, and dictionaries while building a choose-your-own-story project that makes their code feel creative and personal.",
     objectives: ["Work confidently with Python collections", "Break problems into functions", "Build a text-based project"],
     weeklyTopics: ["Strings", "Lists", "Loops over collections", "Functions", "Dictionaries", "Text adventure project"],
     lessons: [
@@ -48,6 +50,7 @@ const courseCatalog = [
   },
   {
     id: 3,
+    description: "This Grade 6 course turns Python learners into confident problem-solvers. Students practise designing functions, choosing loop patterns, debugging errors, reading files, and using modules. The course ends with an arcade toolkit project that brings several reusable mini-games together.",
     objectives: ["Write modular Python programs", "Debug with confidence", "Use files and libraries in projects"],
     weeklyTopics: ["Function design", "Parameters and returns", "Scope", "Loop patterns", "Debugging", "Files", "Modules", "Capstone"],
     lessons: [
@@ -63,6 +66,7 @@ const courseCatalog = [
   },
   {
     id: 4,
+    description: "In this Grade 7 web design course, students learn how the web is built from the ground up. They use semantic HTML to structure information and CSS to style, align, and adapt pages for different screens. Their final project is an accessible personal website with responsive design.",
     objectives: ["Build structured web pages", "Style layouts with CSS", "Create accessible responsive pages"],
     weeklyTopics: ["HTML structure", "Tags and content", "CSS basics", "Box model", "Flexbox", "Personal website", "Responsive design", "Accessibility and forms"],
     lessons: [
@@ -78,6 +82,7 @@ const courseCatalog = [
   },
   {
     id: 5,
+    description: "Grade 8 students make their websites come alive with JavaScript. They learn how to work with values, the DOM, events, arrays, objects, and reusable functions, then combine these skills in an interactive study board that responds to real user actions.",
     objectives: ["Write JavaScript in the browser", "Respond to user events", "Build interactive web pages"],
     weeklyTopics: ["JavaScript values", "Conditionals and loops", "DOM selection", "Events", "Arrays and objects", "Functions", "State", "Interactive website project"],
     lessons: [
@@ -93,6 +98,7 @@ const courseCatalog = [
   },
   {
     id: 6,
+    description: "Python Projects, Git, and GitHub introduces Grade 9 learners to the habits of real software teams. Students plan projects, organise code into modules, work with files and JSON, handle errors, write tests, and use Git branches and pull requests. They finish by publishing a complete Python tool with documentation.",
     objectives: ["Build maintainable Python projects", "Use Git and GitHub workflows", "Collaborate like a developer"],
     weeklyTopics: ["Project planning", "Modules", "Files and JSON", "Errors", "Classes", "Testing", "Git basics", "Branches", "Pull requests", "Capstone"],
     lessons: [
@@ -110,6 +116,7 @@ const courseCatalog = [
   },
   {
     id: 7,
+    description: "This Grade 10 course explores the data structures and web services behind modern software. Students compare ways to store and search information, study efficiency, work with stacks and queues, and consume JSON APIs reliably. A data dashboard project gives them practice turning external data into useful results.",
     objectives: ["Choose appropriate data structures", "Use APIs safely", "Build data-driven Python tools"],
     weeklyTopics: ["Collections", "Complexity", "Stacks and queues", "Recursion", "Searching and sorting", "HTTP", "JSON APIs", "Errors and pagination", "API project", "Testing"],
     lessons: [
@@ -127,6 +134,7 @@ const courseCatalog = [
   },
   {
     id: 8,
+    description: "SQL and React gives Grade 11 learners two essential full-stack skills. Students design relational data, write queries and joins, and then build React interfaces with components, props, state, forms, and API requests. The course culminates in a course planner that connects a polished frontend to structured data.",
     objectives: ["Design relational data", "Query databases with SQL", "Build React interfaces"],
     weeklyTopics: ["Data modelling", "SELECT and filtering", "Joins", "Aggregates", "CRUD", "React components", "Props", "State", "Effects", "Forms", "API integration", "Full-stack project"],
     lessons: [
@@ -146,6 +154,7 @@ const courseCatalog = [
   },
   {
     id: 9,
+    description: "Full-Stack Web Apps and AI is the Grade 12 capstone experience. Students design a production-style application, build REST APIs, connect a database, protect user data, prepare forms, and plan a deployment. They also learn the strengths and limits of AI before adding a safe, evaluated AI feature to their final project.",
     objectives: ["Design a production-style web app", "Integrate a safe AI feature", "Ship and explain a full-stack project"],
     weeklyTopics: ["App architecture", "Node and Express", "REST APIs", "Database design", "Authentication", "Security", "Forms", "Deployment", "AI concepts", "Prompting", "AI integration", "Capstone"],
     lessons: [
@@ -228,9 +237,9 @@ try {
     const language = languageByCourse[course.id];
     await client.query(
       `UPDATE courses
-       SET objectives = $1, weekly_topics = $2, lesson_count = $3
-       WHERE id = $4`,
-      [course.objectives, course.weeklyTopics, course.lessons.length, course.id],
+       SET description = $1, objectives = $2, weekly_topics = $3, lesson_count = $4
+       WHERE id = $5`,
+      [course.description, course.objectives, course.weeklyTopics, course.lessons.length, course.id],
     );
 
     for (let index = 0; index < course.lessons.length; index += 1) {
