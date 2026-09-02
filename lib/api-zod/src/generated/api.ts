@@ -57,7 +57,6 @@ export const TeacherCreateLessonBody = zod.object({
   "content": zod.string().optional(),
   "objectives": zod.array(zod.string()).optional(),
   "durationMinutes": zod.number().default(teacherCreateLessonBodyDurationMinutesDefault),
-  "videoUrl": zod.string().optional(),
   "order": zod.number().optional()
 })
 
@@ -68,10 +67,8 @@ export const TeacherCreateLessonResponse = zod.object({
   "description": zod.string().nullish(),
   "order": zod.number(),
   "durationMinutes": zod.number(),
-  "hasVideo": zod.boolean(),
   "hasExercises": zod.boolean(),
-  "hasQuiz": zod.boolean(),
-  "videoUrl": zod.string().nullish()
+  "hasQuiz": zod.boolean()
 })
 
 
@@ -132,10 +129,8 @@ export const GetCourseLessonsResponseItem = zod.object({
   "description": zod.string().nullish(),
   "order": zod.number(),
   "durationMinutes": zod.number(),
-  "hasVideo": zod.boolean(),
   "hasExercises": zod.boolean(),
-  "hasQuiz": zod.boolean(),
-  "videoUrl": zod.string().nullish()
+  "hasQuiz": zod.boolean()
 })
 export const GetCourseLessonsResponse = zod.array(GetCourseLessonsResponseItem)
 
@@ -154,10 +149,8 @@ export const GetLessonResponse = zod.object({
   "description": zod.string().nullish(),
   "order": zod.number(),
   "durationMinutes": zod.number(),
-  "hasVideo": zod.boolean(),
   "hasExercises": zod.boolean(),
-  "hasQuiz": zod.boolean(),
-  "videoUrl": zod.string().nullish()
+  "hasQuiz": zod.boolean()
 }).and(zod.object({
   "content": zod.string().nullish(),
   "objectives": zod.array(zod.string()).optional()

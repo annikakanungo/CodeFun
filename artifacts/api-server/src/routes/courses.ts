@@ -80,10 +80,8 @@ router.get("/courses/:id/lessons", async (req, res) => {
     description: l.description ?? null,
     order: l.order,
     durationMinutes: l.durationMinutes,
-    hasVideo: l.hasVideo,
     hasExercises: l.hasExercises,
     hasQuiz: l.hasQuiz,
-    videoUrl: l.videoUrl ?? null,
   })));
 });
 

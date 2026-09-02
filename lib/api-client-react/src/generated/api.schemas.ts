@@ -42,11 +42,8 @@ export interface Lesson {
   description?: string | null;
   order: number;
   durationMinutes: number;
-  hasVideo: boolean;
   hasExercises: boolean;
   hasQuiz: boolean;
-  /** @nullable */
-  videoUrl?: string | null;
 }
 
 export type LessonDetail = Lesson & ({
@@ -208,7 +205,6 @@ export interface NewLessonInput {
   content?: string;
   objectives?: string[];
   durationMinutes?: number;
-  videoUrl?: string;
   order?: number;
 }
 

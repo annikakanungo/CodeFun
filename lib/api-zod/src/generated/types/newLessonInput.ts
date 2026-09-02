@@ -13,6 +13,5 @@ export interface NewLessonInput {
   content?: string;
   objectives?: string[];
   durationMinutes?: number;
-  videoUrl?: string;
   order?: number;
 }

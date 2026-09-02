@@ -1,2 +1,2 @@
 - [Workspace script dependency resolution](workspace-script-deps.md) — root utilities may need package-local resolution for workspace dependencies.
-- [Video asset style refreshes](video-asset-style.md) — preserve public video paths when changing lesson video treatments.
+- [Lesson media direction](video-asset-style.md) — keep lessons written-first; do not restore course video playback unless requested.

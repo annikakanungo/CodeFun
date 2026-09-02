@@ -21,10 +21,8 @@ router.get("/lessons/:id", async (req, res) => {
     description: lesson.description ?? null,
     order: lesson.order,
     durationMinutes: lesson.durationMinutes,
-    hasVideo: lesson.hasVideo,
     hasExercises: lesson.hasExercises,
     hasQuiz: lesson.hasQuiz,
-    videoUrl: lesson.videoUrl ?? null,
     content: lesson.content ?? null,
     objectives: lesson.objectives,
   });
@@ -97,14 +95,13 @@ router.post("/lessons", async (req, res) => {
     return;
   }
 
-  const { courseId, title, description, content, objectives, durationMinutes, videoUrl, order } = req.body as {
+  const { courseId, title, description, content, objectives, durationMinutes, order } = req.body as {
     courseId: number;
     title: string;
     description?: string;
     content?: string;
     objectives?: string[];
     durationMinutes?: number;
-    videoUrl?: string;
     order?: number;
   };
 
@@ -129,9 +126,8 @@ router.post("/lessons", async (req, res) => {
     content: content?.trim() ?? null,
     objectives: objectives ?? [],
     durationMinutes: durationMinutes ?? 45,
-    videoUrl: videoUrl?.trim() ?? null,
     order: lessonOrder,
-    hasVideo: !!videoUrl,
+    hasVideo: false,
     hasExercises: false,
     hasQuiz: false,
   }).returning();

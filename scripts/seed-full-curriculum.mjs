@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import { createRequire } from "node:module";
 
 const require = createRequire(new URL("../lib/db/package.json", import.meta.url));
@@ -279,31 +278,24 @@ try {
       const entry = course.lessons[index];
       const order = index + 1;
       const existingResult = await client.query(
-        `SELECT id, video_url FROM lessons WHERE course_id = $1 AND "order" = $2 LIMIT 1`,
+        `SELECT id FROM lessons WHERE course_id = $1 AND "order" = $2 LIMIT 1`,
         [course.id, order],
       );
 
       let lessonId;
-      let videoUrl = existingResult.rows[0]?.video_url ?? null;
-      const localVideoPath = `artifacts/coding-program/public/videos/lesson-${existingResult.rows[0]?.id}.mp4`;
-      if (existingResult.rows[0]?.id && fs.existsSync(localVideoPath)) {
-        videoUrl = `/videos/lesson-${existingResult.rows[0].id}.mp4`;
-      }
 
       if (existingResult.rows[0]) {
         lessonId = existingResult.rows[0].id;
         await client.query(
           `UPDATE lessons
            SET title = $1, description = $2, duration_minutes = $3,
-               has_video = $4, video_url = $5, content = $6,
-               objectives = $7
-           WHERE id = $8`,
+               has_video = false, video_url = NULL, content = $4,
+               objectives = $5
+            WHERE id = $6`,
           [
             entry.title,
             entry.description,
             course.id >= 8 ? 60 : 45,
-            Boolean(videoUrl),
-            videoUrl,
             contentFor(entry, language, course.id < 7),
             entry.objectives,
             lessonId,

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion, type Variants } from 'framer-motion';
 import { PageTransition } from '@/components/PageTransition';
-import { Plus, X, BookOpen, Video, Target, GraduationCap, Lightbulb, Lock, Loader2, Check } from 'lucide-react';
+import { Plus, X, BookOpen, Target, GraduationCap, Lightbulb, Lock, Loader2, Check } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -32,7 +32,6 @@ export default function CreateLesson() {
   const [description, setDescription] = useState('');
   const [durationMinutes, setDurationMinutes] = useState('45');
   const [content, setContent] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
   const [objectives, setObjectives] = useState<string[]>(['']);
 
   const addObjective = () => setObjectives([...objectives, '']);
@@ -52,7 +51,6 @@ export default function CreateLesson() {
           content: content || undefined,
           objectives: objectives.filter(o => o.trim() !== ''),
           durationMinutes: durationMinutes ? Number(durationMinutes) : 45,
-          videoUrl: videoUrl || undefined
         }
       },
       {
@@ -191,20 +189,16 @@ export default function CreateLesson() {
             <motion.div variants={itemVariants} className="bg-card rounded-[2rem] p-8 border-2 shadow-sm relative overflow-hidden">
               <div className="flex items-center gap-3 mb-8 pb-5 border-b-2">
                 <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-                  <Video className="w-5 h-5 text-emerald-600" />
+                  <BookOpen className="w-5 h-5 text-emerald-600" />
                 </div>
-                <h2 className="text-2xl font-black font-heading tracking-tight">2. Lesson Content</h2>
+                <h2 className="text-2xl font-black font-heading tracking-tight">2. Written Lesson</h2>
               </div>
               <div className="space-y-6">
                 <div>
-                  <label className="text-sm font-bold mb-2 block text-slate-700 dark:text-slate-300">Main Lesson Text (Markdown supported)</label>
-                  <Textarea className="rounded-2xl border-2 p-5 shadow-sm text-base font-medium min-h-[300px] leading-relaxed" value={content} onChange={e => setContent(e.target.value)} placeholder="## Welcome to Python!&#10;&#10;Today we're going to learn about..." />
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-2xl border-2 border-slate-100 dark:border-slate-800">
-                  <label className="text-sm font-bold mb-2 block text-slate-700 dark:text-slate-300">Video URL (Optional)</label>
-                  <Input className="h-14 rounded-2xl border-2 px-4 shadow-sm text-base font-medium bg-white dark:bg-slate-950" value={videoUrl} onChange={e => setVideoUrl(e.target.value)} placeholder="https://youtube.com/watch?v=..." />
+                  <label className="text-sm font-bold mb-2 block text-slate-700 dark:text-slate-300">Lesson Text</label>
+                  <Textarea className="rounded-2xl border-2 p-5 shadow-sm text-base font-medium min-h-[300px] leading-relaxed" value={content} onChange={e => setContent(e.target.value)} placeholder="Welcome to this lesson!&#10;&#10;Explain one idea at a time. Add a short example, then tell students what to try." />
                   <p className="text-xs text-muted-foreground mt-3 font-semibold flex items-center gap-1.5">
-                    <Lightbulb className="w-3.5 h-3.5" /> Students will see an embedded video player at the top of the lesson.
+                    <Lightbulb className="w-3.5 h-3.5" /> Use short paragraphs, clear headings, examples, and simple instructions.
                   </p>
                 </div>
               </div>
@@ -276,8 +270,8 @@ export default function CreateLesson() {
                   <Check className="w-5 h-5 text-emerald-500" />
                 </div>
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-relaxed">
-                  <strong className="text-slate-900 dark:text-white block mb-1">Visual Learning</strong>
-                  Add a short video introduction if possible. It heavily boosts student engagement!
+                <strong className="text-slate-900 dark:text-white block mb-1">Easy to Follow</strong>
+                  Explain one idea at a time and give students a small task they can try right away.
                 </p>
               </li>
             </ul>

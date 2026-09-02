@@ -20,8 +20,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { PageTransition } from "@/components/PageTransition";
 import { useUser } from "@clerk/react";
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
-
 function LessonGate({ lessonTitle, courseId }: { lessonTitle?: string; courseId?: number }) {
   return (
     <PageTransition>
@@ -271,33 +269,6 @@ export default function LessonDetail() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-10 space-y-10">
-        
-        {lesson.videoUrl && (
-          <div className="aspect-video bg-[#0f172a] rounded-3xl overflow-hidden border-2 shadow-2xl relative">
-            <video
-              className="w-full h-full object-cover"
-              controls
-              playsInline
-              preload="metadata"
-              poster={`${basePath}/logo.svg`}
-              aria-label={`Video lesson: ${lesson.title}`}
-            >
-              <source
-                src={lesson.videoUrl.startsWith("http")
-                  ? lesson.videoUrl
-                  : `${basePath}${lesson.videoUrl.startsWith("/") ? lesson.videoUrl : `/${lesson.videoUrl}`}`}
-                type="video/mp4"
-              />
-              Your browser does not support video playback.
-            </video>
-            <div className="absolute top-4 left-4 pointer-events-none">
-              <span className="inline-flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white backdrop-blur-sm">
-                <Play className="w-3.5 h-3.5 fill-current" /> Short lesson video
-              </span>
-            </div>
-          </div>
-        )}
-
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="w-full justify-start border-b-2 rounded-none h-auto p-0 bg-transparent gap-2 md:gap-6 overflow-x-auto no-scrollbar">
             <TabsTrigger value="content" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none px-2 py-4 font-black text-sm md:text-base text-muted-foreground uppercase tracking-wider">

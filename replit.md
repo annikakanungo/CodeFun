@@ -1,6 +1,6 @@
 # code.fun — Free Coding Program
 
-A free coding education platform for students in Grades 4–12. Offers grade-based courses, weekly lessons with videos and exercises, quizzes, teacher lesson plans, and Ontario curriculum expectation mappings.
+A free coding education platform for students in Grades 4–12. Offers grade-based courses, easy-to-follow written lessons and exercises, quizzes, teacher lesson plans, and Ontario curriculum expectation mappings.
 
 ## Run & Operate
 
@@ -45,7 +45,7 @@ A free coding education platform for students in Grades 4–12. Offers grade-bas
 - **Home**: Hero, grade journey progression, program stats, recent student activity feed
 - **Courses**: Browse by grade band; each card color-coded per course
 - **Course Detail**: Objectives, weekly topics, full lesson list with indicators
-- **Lesson Detail**: Video, written content, exercises, quiz, curriculum mappings, teacher plan
+- **Lesson Detail**: Written content, exercises, quiz, curriculum mappings, teacher plan
 - **Resources**: Filterable library of free coding tools and tutorials
 - **Teacher Hub**: Lesson plans per grade with objectives, materials, activities, assessment ideas
 - **Student Progress**: Completion tracker with badges

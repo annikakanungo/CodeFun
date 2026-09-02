@@ -1,10 +1,10 @@
 ---
-name: Video asset style refreshes
-description: Lesson video restyling should preserve stable public asset paths.
+name: Lesson media direction
+description: The lesson experience is intentionally written-first with no course video assets.
 ---
 
-Restyle lesson videos in place while keeping their filenames and resolution stable.
+Course lessons are written-first: do not add or restore lesson video playback unless the product direction changes.
 
-**Why:** The database and lesson UI reference public video paths; stable paths let visual treatments change without data migrations or broken lesson links.
+**Why:** Students should learn from clear, easy-to-understand written lessons, examples, and instructions without depending on video media.
 
-**How to apply:** Convert to temporary files, validate the outputs, then atomically replace the originals. Keep the established 16:9 720p format unless a product requirement changes.
+**How to apply:** Keep lesson content and exercises complete on their own, and preserve the existing written-content API and UI flow.

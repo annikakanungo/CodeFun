@@ -461,7 +461,7 @@ components:
 
     Lesson:
       type: object
-      required: [id, courseId, title, order, durationMinutes, hasVideo, hasExercises, hasQuiz]
+      required: [id, courseId, title, order, durationMinutes, hasExercises, hasQuiz]
       properties:
         id:
           type: integer
@@ -475,14 +475,10 @@ components:
           type: integer
         durationMinutes:
           type: integer
-        hasVideo:
-          type: boolean
         hasExercises:
           type: boolean
         hasQuiz:
           type: boolean
-        videoUrl:
-          type: ["string", "null"]
 
     LessonDetail:
       allOf:
@@ -759,8 +755,6 @@ components:
         durationMinutes:
           type: integer
           default: 45
-        videoUrl:
-          type: string
         order:
           type: integer
 

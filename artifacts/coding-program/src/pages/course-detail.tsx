@@ -1,6 +1,6 @@
 import { useParams, Link } from "wouter";
 import { useGetCourse, useGetCourseLessons, getGetCourseQueryKey, getGetCourseLessonsQueryKey } from "@workspace/api-client-react";
-import { ArrowLeft, BookOpen, Clock, PlayCircle, CheckCircle2, Video, Code, HelpCircle, Star, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, Clock, CheckCircle2, Code, HelpCircle, Star, Zap } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { PageTransition } from "@/components/PageTransition";
@@ -126,11 +126,6 @@ export default function CourseDetail() {
                               <span className="flex items-center gap-1.5 bg-muted px-2.5 py-1 rounded-md">
                                 <Clock className="w-4 h-4" /> {lesson.durationMinutes} min
                               </span>
-                              {lesson.hasVideo && (
-                                <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2.5 py-1 rounded-md">
-                                  <Video className="w-4 h-4" /> Video
-                                </span>
-                              )}
                               {lesson.hasExercises && (
                                 <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2.5 py-1 rounded-md">
                                   <Code className="w-4 h-4" /> Code
@@ -146,7 +141,7 @@ export default function CourseDetail() {
                           
                           <div className="flex-shrink-0 flex items-center justify-center pl-2">
                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
-                              <PlayCircle className="w-5 h-5 ml-0.5" />
+                              <ArrowRight className="w-5 h-5" />
                             </div>
                           </div>
                         </Link>
