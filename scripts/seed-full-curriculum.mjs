@@ -212,8 +212,31 @@ const escapeHtml = (value) => String(value ?? "")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
 
-const contentFor = (entry, language) => {
+const contentFor = (entry, language, simple = false) => {
   const focus = entry.focus[0].toUpperCase() + entry.focus.slice(1);
+  if (simple) {
+    return `<h3>Today you will learn</h3>
+<p>${escapeHtml(entry.description)} We will take it one small step at a time.</p>
+
+<h3>The big idea</h3>
+<p>${escapeHtml(focus)}. This is a tool that helps your program do one clear job.</p>
+
+<h3>Example</h3>
+<pre><code>${escapeHtml(entry.example)}</code></pre>
+
+<h3>Try it</h3>
+<p>${escapeHtml(entry.practice)} First look at the example. Then change one small part and run it again.</p>
+
+<h3>Check your work</h3>
+<ul>
+  <li>What did your program do?</li>
+  <li>What changed when you changed one value?</li>
+  <li>What could you try if the result was not what you expected?</li>
+</ul>
+
+<h3>Nice work</h3>
+<p>Explain what you learned in your own words. Then make one small improvement to your example.</p>`;
+  }
   return `<h3>Goal</h3>
 <p>${escapeHtml(entry.description)}</p>
 
@@ -281,7 +304,7 @@ try {
             course.id >= 8 ? 60 : 45,
             Boolean(videoUrl),
             videoUrl,
-            contentFor(entry, language),
+            contentFor(entry, language, course.id < 7),
             entry.objectives,
             lessonId,
           ],
@@ -299,7 +322,7 @@ try {
             entry.description,
             order,
             course.id >= 8 ? 60 : 45,
-            contentFor(entry, language),
+            contentFor(entry, language, course.id < 7),
             entry.objectives,
           ],
         );
