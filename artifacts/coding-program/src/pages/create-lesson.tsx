@@ -17,7 +17,7 @@ export default function CreateLesson() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
-  const { data: me, isLoading: meLoading } = useGetMe({ 
+  const { data: me, isLoading: meLoading, isError: meFailed, error: meError } = useGetMe({
     query: { enabled: isSignedIn, queryKey: getGetMeQueryKey() } 
   });
 
@@ -58,8 +58,12 @@ export default function CreateLesson() {
           toast({ title: "Lesson Published", description: "Your new lesson is live and ready for students." });
           setLocation(`/courses/${courseId}`);
         },
-        onError: () => {
-          toast({ title: "Error", description: "Could not publish the lesson. Please try again.", variant: "destructive" });
+        onError: (error) => {
+          toast({
+            title: "Could not publish lesson",
+            description: error instanceof Error ? error.message : "Please finish teacher setup and try again.",
+            variant: "destructive",
+          });
         }
       }
     );
@@ -101,7 +105,44 @@ export default function CreateLesson() {
     );
   }
 
-  if (me && me.role !== 'teacher') {
+  if (meFailed && meError?.status !== 404) {
+    return (
+      <PageTransition className="flex-1 flex flex-col items-center justify-center p-6 min-h-[80vh]">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md w-full bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-rose-100 dark:border-rose-900/50 p-10 text-center overflow-hidden relative">
+          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-rose-400 to-orange-500" />
+          <h2 className="text-3xl font-black font-heading mb-4 text-violet-950 dark:text-white tracking-tight">We couldn't verify your account</h2>
+          <p className="text-muted-foreground mb-10 font-medium text-lg leading-relaxed">
+            Please refresh the page and try again. If the problem continues, sign out and sign back in.
+          </p>
+          <Button onClick={() => window.location.reload()} className="w-full h-14 text-lg font-black rounded-2xl bg-violet-600 hover:bg-violet-700 text-white shadow-xl shadow-violet-200 border-0">
+            Refresh
+          </Button>
+        </motion.div>
+      </PageTransition>
+    );
+  }
+
+  if (!me) {
+    return (
+      <PageTransition className="flex-1 flex flex-col items-center justify-center p-6 min-h-[80vh]">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md w-full bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-amber-100 dark:border-amber-900/50 p-10 text-center overflow-hidden relative">
+          <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-amber-400 to-orange-500" />
+          <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-300">
+            <GraduationCap className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-3xl font-black font-heading mb-4 text-violet-950 dark:text-white tracking-tight">Finish teacher setup</h2>
+          <p className="text-muted-foreground mb-10 font-medium text-lg leading-relaxed">
+            Choose “I’m a Teacher” during account setup before publishing lessons.
+          </p>
+          <Button onClick={() => setLocation('/onboarding')} className="w-full h-14 text-lg font-black rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-violet-950 hover:opacity-90 shadow-xl shadow-amber-200/50 border-0">
+            Set up teacher account
+          </Button>
+        </motion.div>
+      </PageTransition>
+    );
+  }
+
+  if (me.role !== 'teacher') {
     return (
       <PageTransition className="flex-1 flex flex-col items-center justify-center p-6 min-h-[80vh]">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md w-full bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-violet-100 dark:border-violet-900/50 p-10 text-center overflow-hidden relative">

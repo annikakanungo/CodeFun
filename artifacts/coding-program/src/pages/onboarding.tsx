@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/react';
-import { useSaveUserRole } from '@workspace/api-client-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { getGetMeQueryKey, useSaveUserRole } from '@workspace/api-client-react';
 import { useLocation } from 'wouter';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { GraduationCap, Presentation, ArrowRight, Check, Loader2 } from 'lucide-react';
@@ -11,6 +12,7 @@ export default function Onboarding() {
   const { user, isLoaded, isSignedIn } = useUser();
   const [, setLocation] = useLocation();
   const [selectedRole, setSelectedRole] = useState<'student' | 'teacher' | null>(null);
+  const queryClient = useQueryClient();
 
   const saveRole = useSaveUserRole();
 
@@ -31,7 +33,8 @@ export default function Onboarding() {
         }
       },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: getGetMeQueryKey() });
           setLocation(selectedRole === 'teacher' ? '/teacher' : '/');
         }
       }
