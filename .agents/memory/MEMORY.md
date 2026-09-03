@@ -1,2 +1,3 @@
 - [Workspace script dependency resolution](workspace-script-deps.md) — root utilities may need package-local resolution for workspace dependencies.
 - [Lesson media direction](video-asset-style.md) — keep lessons written-first; do not restore course video playback unless requested.
+- [Dependency security updates](dependency-remediation.md) — preserve the workspace release-age guard and verify generator compatibility after lockfile upgrades.
