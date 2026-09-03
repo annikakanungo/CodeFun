@@ -44,6 +44,9 @@ jobs:
           PORT: 3000
           BASE_PATH: /${{ github.event.repository.name }}/
 
+      - name: Duplicate index to 404 for Routing
+        run: cp ./artifacts/coding-program/dist/public/index.html ./artifacts/coding-program/dist/public/404.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
