@@ -40,6 +40,10 @@ jobs:
           PORT: 3000
           BASE_PATH: /
 
+      # 👇 THIS NEW STEP COPIES THE CONFIG ROUTER DIRECTLY INTO YOUR EXPORTED CODE
+      - name: Inject Routing Rules
+        run: cp staticwebapp.config.json artifacts/coding-program/dist/public/
+
       - name: Build And Deploy to Azure
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -48,9 +52,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "artifacts/coding-program/dist/public" # 👈 Points directly to your built files now!
+          app_location: "artifacts/coding-program/dist/public" 
           api_location: "" 
-          output_location: "" # 👈 Must be blank when skipping app builds!
+          output_location: "" 
           skip_app_build: true
           ###### End of Repository/Build Configurations ######
 
