@@ -48,10 +48,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/" 
+          app_location: "artifacts/coding-program/dist/public" # 👈 Points directly to your built files now!
           api_location: "" 
-          output_location: "artifacts/coding-program/dist/public"
-          skip_app_build: true # 👈 This tells Azure to skip its own broken builder and use our successful one!
+          output_location: "" # 👈 Must be blank when skipping app builds!
+          skip_app_build: true
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
