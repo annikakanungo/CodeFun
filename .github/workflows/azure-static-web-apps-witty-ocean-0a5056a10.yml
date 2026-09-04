@@ -34,11 +34,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build Sandbox Frontend
-        run: pnpm run build
-        env:
-          PORT: 3000
-          BASE_PATH: /
+       - name: Build Sandbox Frontend
+    run: pnpm run build
+    env:
+      PORT: 3000
+      BASE_PATH: /
+      VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
 
       # 👇 THIS WRITES THE ROUTING RULES DIRECTLY INTO THE COPIED CODE FROM THE TERMINAL
       - name: Write Azure Routing Rules
