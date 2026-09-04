@@ -1,7 +1,3 @@
-export default async function (context, req) {
-  return {
-    status: 200,
-    body: { xp: 120, level: 3 }
-  };
+export default async function handler(req, res) {
+  res.status(200).json({ xp: 120, level: 3 });
 }
-
